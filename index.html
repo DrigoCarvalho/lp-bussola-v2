@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<noscript><style>#methodStage{display:none!important}.steps-timeline{display:block!important}.reveal,.bag-chip{opacity:1!important;transform:none!important}</style></noscript>
+<noscript><style>#methodStage{display:none!important}.steps-timeline{display:block!important}.reveal{opacity:1!important;transform:none!important}.metodo-slip{opacity:1!important;transform:none!important}#heroMarker{background:linear-gradient(to right,rgba(215,229,222,.92),rgba(215,229,222,.92)) no-repeat 0 62%/100% 78%;box-decoration-break:clone;-webkit-box-decoration-break:clone;padding:0 .06em;border-radius:.14em}</style></noscript>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -96,6 +96,10 @@ tailwind.config = {
   /* Reveal on scroll */
   .reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s ease, transform .8s cubic-bezier(.22,.61,.36,1); will-change: opacity, transform; }
   .reveal.is-visible { opacity: 1; transform: none; }
+
+  /* "Precisam de método." — escorrega para a linha de baixo após o bloco aparecer */
+  .metodo-slip { display: block; opacity: 0; transform: translateY(-0.55em); transition: opacity .75s ease .5s, transform .75s cubic-bezier(.22,.61,.36,1) .5s; }
+  .reveal.is-visible .metodo-slip { opacity: 1; transform: none; }
 
   /* Rosa dos ventos do hero — flutuação sutil, sombra seguindo o contorno */
   .hero-compass {
@@ -213,6 +217,42 @@ tailwind.config = {
     .compass-point[aria-selected="true"] { transform: scale(1.1); }
   }
 
+  /* Hero mobile compacta: CTA acima da dobra + amostra da seção seguinte */
+  @media (max-width: 767px) {
+    #hero-title { font-size: clamp(1.85rem, 8.8vw, 2.15rem) !important; line-height: 1.06; }
+    .hero-intro { font-size: .84rem !important; }
+    #inicio .max-w-xl { margin-top: .875rem !important; }
+    #inicio ul { margin-top: .625rem !important; }
+    #inicio ul li span { font-size: .85rem; }
+    #inicio ul li svg { width: 17px; height: 17px; }
+    .hero-micro { font-size: .75rem !important; line-height: 1.45 !important; margin-top: 1rem !important; }
+    .hero-banner-inner { height: 140px !important; }
+    .banner-photo {
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
+      mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
+    }
+  }
+  /* Celulares de altura intermediária (até 820px): banner menor e ritmo mais enxuto */
+  @media (max-width: 767px) and (max-height: 820px) {
+    .hero-banner-inner { height: 120px !important; }
+    .hero-grid { padding-top: .75rem !important; padding-bottom: 1.25rem !important; }
+    #inicio .max-w-xl { margin-top: .75rem !important; }
+    #inicio ul { row-gap: .4rem !important; margin-top: .5rem !important; }
+    .hero-label { margin-bottom: .5rem !important; }
+  }
+  /* Telas muito baixas (iPhone SE / paisagem): banner e espaçamentos ainda mais compactos */
+  @media (max-width: 767px) and (max-height: 700px) {
+    .hero-banner-inner { height: 96px !important; }
+    #hero-title { font-size: clamp(1.55rem, 7.2vw, 1.7rem) !important; }
+    .hero-grid { padding-top: .75rem !important; padding-bottom: 1rem !important; }
+    .hero-label { margin-bottom: .5rem !important; }
+    .hero-intro { font-size: .78rem !important; }
+    #inicio ul { row-gap: .35rem !important; margin-top: .4rem !important; }
+    #inicio ul li span { font-size: .8rem; }
+    .hero-micro { font-size: .72rem !important; margin-top: .75rem !important; }
+    .hero-cta-wrap { margin-top: 1rem !important; }
+  }
+
   /* Linha do tempo mobile */
   @media (max-width: 767px) {
     .steps-timeline { position: relative; padding-left: 3.4rem; }
@@ -225,8 +265,6 @@ tailwind.config = {
   }
 
   /* Chips da mochila (seção 6) */
-  .bag-chip { opacity: 0; transform: translateY(14px) scale(.96); transition: opacity .6s ease, transform .6s cubic-bezier(.22,.61,.36,1); }
-  .bag-chips.is-visible .bag-chip { opacity: 1; transform: none; }
 
   /* Cards */
   .card-hover { transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease; }
@@ -253,10 +291,29 @@ tailwind.config = {
   /* Marca-d'água da rosa dos ventos */
   .watermark { position: absolute; pointer-events: none; opacity: .07; }
 
+  /* Efeito marca-texto (hero) */
+  .marker {
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    padding: 0 .06em;
+    border-radius: .14em;
+    background-image: linear-gradient(to right, rgba(215,229,222,.92), rgba(215,229,222,.92));
+    background-repeat: no-repeat;
+    background-position: 0 62%;
+    background-size: 0% 78%;
+    animation: marker-sweep 1.2s cubic-bezier(.5,.05,.25,1) .9s forwards;
+  }
+  /* Traços sequenciais por linha (delays/durações definidos via JS) */
+  @keyframes marker-sweep {
+    to { background-size: 100% 78%; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-    .reveal, .bag-chip { opacity: 1 !important; transform: none !important; }
+    .reveal { opacity: 1 !important; transform: none !important; }
+    .metodo-slip { opacity: 1 !important; transform: none !important; }
+    .marker { animation: none !important; background-size: 100% 78%; }
   }
 </style>
 </head>
@@ -266,7 +323,7 @@ tailwind.config = {
 <header id="navbar" class="fixed top-0 left-0 right-0 z-50">
   <div class="nav-inner max-w-7xl mx-auto px-5 sm:px-8 py-4 sm:py-5 flex items-center justify-between gap-4">
     <a href="#inicio" class="flex items-center gap-3 shrink-0" aria-label="Método Bússola — voltar ao início">
-      <img src="assets/logo-bussola.png" alt="" width="40" height="40" class="shrink-0 w-10 h-10 object-contain">
+      <img src="assets/logo-bussola.webp" alt="" width="40" height="40" class="shrink-0 w-10 h-10 object-contain">
       <span class="font-serif font-semibold tracking-tight text-navy text-base sm:text-lg leading-none">MÉTODO <span class="text-gold">BÚSSOLA</span></span>
     </a>
     <nav class="hidden lg:flex items-center gap-8" aria-label="Navegação principal">
@@ -277,7 +334,7 @@ tailwind.config = {
       <a href="#jornada" class="nav-link text-sm font-medium text-ink/80 hover:text-navy">Jornada</a>
     </nav>
     <div class="flex items-center gap-3">
-      <a href="https://wa.me/5519998585655?text=Ol%C3%A1%2C%20William!%20Quero%20descobrir%20minha%20pr%C3%B3xima%20dire%C3%A7%C3%A3o%20profissional.%20Gostaria%20de%20fazer%20a%20avalia%C3%A7%C3%A3o%20gratuita%20do%20M%C3%A9todo%20B%C3%9ASSOLA." target="_blank" rel="noopener" class="btn-primary hidden md:inline-flex items-center rounded-full px-5 py-2.5 text-sm font-semibold">Quero encontrar minha próxima direção</a>
+      <a href="https://wa.me/5519998585655?text=Ol%C3%A1%2C%20William!%20Quero%20descobrir%20minha%20pr%C3%B3xima%20dire%C3%A7%C3%A3o%20profissional.%20Gostaria%20de%20fazer%20a%20avalia%C3%A7%C3%A3o%20gratuita%20do%20M%C3%A9todo%20B%C3%9ASSOLA." target="_blank" rel="noopener" class="btn-primary hidden md:inline-flex items-center rounded-full px-5 py-2.5 text-sm font-semibold">Fazer minha avaliação GRATUITA</a>
       <button id="menuBtn" class="lg:hidden inline-flex items-center justify-center w-11 h-11 rounded-full border border-line bg-card text-navy" aria-expanded="false" aria-controls="mobileMenu" aria-label="Abrir menu">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
           <path class="menu-open-icon" d="M4 7h16M4 12h16M4 17h16"/>
@@ -292,7 +349,7 @@ tailwind.config = {
       <a href="#sobre" class="text-base font-medium text-ink">Sobre</a>
       <a href="#depoimentos" class="text-base font-medium text-ink">Depoimentos</a>
       <a href="#jornada" class="text-base font-medium text-ink">Jornada</a>
-      <a href="https://wa.me/5519998585655?text=Ol%C3%A1%2C%20William!%20Quero%20descobrir%20minha%20pr%C3%B3xima%20dire%C3%A7%C3%A3o%20profissional.%20Gostaria%20de%20fazer%20a%20avalia%C3%A7%C3%A3o%20gratuita%20do%20M%C3%A9todo%20B%C3%9ASSOLA." target="_blank" rel="noopener" class="btn-primary inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold mt-2">Quero encontrar minha próxima direção</a>
+      <a href="https://wa.me/5519998585655?text=Ol%C3%A1%2C%20William!%20Quero%20descobrir%20minha%20pr%C3%B3xima%20dire%C3%A7%C3%A3o%20profissional.%20Gostaria%20de%20fazer%20a%20avalia%C3%A7%C3%A3o%20gratuita%20do%20M%C3%A9todo%20B%C3%9ASSOLA." target="_blank" rel="noopener" class="btn-primary inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold mt-2">Fazer minha avaliação GRATUITA</a>
     </nav>
   </div>
 </header>
@@ -304,209 +361,87 @@ tailwind.config = {
     <div class="absolute -top-32 -right-32 w-[520px] h-[520px] rounded-full" style="background: radial-gradient(circle, rgba(180,146,74,.10), transparent 65%);"></div>
     <div class="absolute top-1/2 -left-40 w-[420px] h-[420px] rounded-full" style="background: radial-gradient(circle, rgba(52,71,99,.08), transparent 65%);"></div>
   </div>
-  <div class="max-w-7xl mx-auto px-5 sm:px-8 pt-32 sm:pt-40 pb-24 md:pb-36 grid lg:grid-cols-[1.08fr_.92fr] gap-14 lg:gap-8 items-center">
+  <!-- Banner mobile: foto do William com degradê preto → navy -->
+  <div class="hero-banner md:hidden relative mt-[76px] overflow-hidden" style="background: linear-gradient(to right, #25334A 0%, #1A1A19 28%, #1A1A19 72%, #25334A 100%);">
+    <div class="hero-banner-inner relative h-[140px] flex items-center justify-center">
+      <img src="assets/william-banner.webp" alt="William Gutierrez segurando uma bússola dourada junto ao rosto" width="693" height="470" class="banner-photo h-full w-auto" fetchpriority="high">
+    </div>
+  </div>
+  <div class="hero-grid max-w-7xl mx-auto px-5 sm:px-8 pt-5 md:pt-40 pb-8 md:pb-36 grid lg:grid-cols-[1.08fr_.92fr] gap-14 lg:gap-8 items-center">
     <div>
-      <p class="reveal text-xs font-semibold tracking-[0.22em] uppercase text-gold-label mb-6">Orientação profissional com método</p>
-      <h1 id="hero-title" class="reveal font-serif font-semibold text-navy leading-[1.04] tracking-[-0.02em]" style="font-size: clamp(2.5rem, 5.6vw, 4.4rem);">Escolha sua próxima direção profissional <em class="italic font-medium">sem recomeçar do zero.</em></h1>
-      <div class="reveal mt-8 space-y-4 max-w-xl">
-        <p class="text-lg text-muted leading-relaxed">Você sente que algo precisa mudar, mas não sabe exatamente o quê?</p>
-        <p class="text-lg text-muted leading-relaxed">Não sabe se o problema está na empresa, na função ou na profissão?</p>
-        <p class="text-lg text-muted leading-relaxed">Tem medo de tomar a decisão errada e desperdiçar tudo o que já construiu?</p>
-        <p class="text-lg text-ink font-medium leading-relaxed">O Método BÚSSOLA foi criado para ajudar profissionais a responder essas perguntas antes de tomar decisões importantes na carreira.</p>
+      <p class="reveal text-xs font-semibold tracking-[0.22em] uppercase text-gold-label mb-3 md:mb-6">Orientação profissional com método</p>
+      <h1 id="hero-title" class="reveal font-serif font-semibold text-navy leading-[1.04] tracking-[-0.02em]" style="font-size: clamp(2.5rem, 5.6vw, 4.4rem);">Escolha sua próxima direção profissional <em class="italic font-medium" id="heroMarker">sem recomeçar do zero.</em></h1>
+      <div class="reveal mt-5 md:mt-8 max-w-xl">
+        <p class="hero-intro text-lg text-ink leading-relaxed">O <strong class="font-bold">Método BÚSSOLA</strong> te ajuda a:</p>
+        <ul class="mt-4 md:mt-5 grid gap-y-2.5 md:gap-y-3.5" role="list">
+          <li class="flex items-start gap-2.5">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
+            <span class="font-medium text-ink leading-snug">Fazer uma transição de carreira ou mudar de empresa.</span>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
+            <span class="font-medium text-ink leading-snug">Crescer na posição atual e melhorar sua performance.</span>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
+            <span class="font-medium text-ink leading-snug">Recuperar o sentido e propósito do seu trabalho.</span>
+          </li>
+        </ul>
       </div>
-      <div class="reveal mt-10">
+      <div class="hero-cta-wrap reveal mt-6 md:mt-10">
         <a href="https://wa.me/5519998585655?text=Ol%C3%A1%2C%20William!%20Quero%20descobrir%20minha%20pr%C3%B3xima%20dire%C3%A7%C3%A3o%20profissional.%20Gostaria%20de%20fazer%20a%20avalia%C3%A7%C3%A3o%20gratuita%20do%20M%C3%A9todo%20B%C3%9ASSOLA." target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-3 rounded-full px-7 py-4 text-sm sm:text-base font-bold">
-          Quero encontrar minha próxima direção
+          Fazer minha avaliação GRATUITA
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
-        <p class="mt-4 text-sm text-muted max-w-md leading-relaxed">A avaliação é gratuita, leva cerca de 5 minutos e é o primeiro passo para entender qual pode ser sua próxima direção profissional.</p>
+        <p class="hero-micro mt-3 md:mt-4 text-sm text-muted max-w-md leading-relaxed">A avaliação é gratuita, leva cerca de 5 minutos e é o primeiro passo para entender qual pode ser sua próxima direção profissional.</p>
       </div>
     </div>
-    <div class="reveal relative flex items-center justify-center">
-      <img src="assets/hero-compass.webp" alt="Rosa dos ventos do Método Bússola, com o monograma WG ao centro" width="1000" height="1000" class="hero-compass w-full max-w-[460px] h-auto" fetchpriority="high">
+    <div class="reveal relative hidden md:flex items-center justify-center">
+      <picture>
+        <source media="(min-width: 768px)" srcset="assets/hero-compass.webp" width="1000" height="1000">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Rosa dos ventos do Método Bússola, com o monograma WG ao centro" width="1000" height="1000" class="hero-compass w-full max-w-[460px] h-auto" fetchpriority="high">
+      </picture>
     </div>
   </div>
 </section>
 
-<!-- ============ 3. FAIXA DE IDENTIFICAÇÃO ============ -->
-<section id="decisoes" aria-labelledby="decisoes-title" class="bg-panel border-y border-line">
-  <div class="max-w-7xl mx-auto px-5 sm:px-8 py-24 md:py-32">
-    <div class="max-w-3xl">
-      <p class="reveal text-xs font-semibold tracking-[0.22em] uppercase text-gold-label mb-4">O momento da decisão</p>
-      <h2 id="decisoes-title" class="reveal font-serif font-semibold text-navy tracking-[-0.015em] leading-tight" style="font-size: clamp(1.8rem, 3.4vw, 2.7rem);">O Método BÚSSOLA pode ajudar você se hoje precisa decidir:</h2>
-    </div>
-    <ul class="stagger-group mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4" role="list">
-      <li class="reveal card-hover flex items-start gap-3.5 bg-card border border-line rounded-2xl px-5 py-5 shadow-soft">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
-        <span class="font-medium text-ink leading-snug">Permanecer ou mudar de empresa.</span>
-      </li>
-      <li class="reveal card-hover flex items-start gap-3.5 bg-card border border-line rounded-2xl px-5 py-5 shadow-soft">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
-        <span class="font-medium text-ink leading-snug">Fazer uma transição de carreira.</span>
-      </li>
-      <li class="reveal card-hover flex items-start gap-3.5 bg-card border border-line rounded-2xl px-5 py-5 shadow-soft">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
-        <span class="font-medium text-ink leading-snug">Buscar uma recolocação profissional.</span>
-      </li>
-      <li class="reveal card-hover flex items-start gap-3.5 bg-card border border-line rounded-2xl px-5 py-5 shadow-soft">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
-        <span class="font-medium text-ink leading-snug">Aceitar uma promoção ou um novo desafio.</span>
-      </li>
-      <li class="reveal card-hover flex items-start gap-3.5 bg-card border border-line rounded-2xl px-5 py-5 shadow-soft">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
-        <span class="font-medium text-ink leading-snug">Melhorar sua performance.</span>
-      </li>
-      <li class="reveal card-hover flex items-start gap-3.5 bg-card border border-line rounded-2xl px-5 py-5 shadow-soft">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
-        <span class="font-medium text-ink leading-snug">Recuperar o sentido do seu trabalho.</span>
-      </li>
-    </ul>
-  </div>
-</section>
-
-<!-- ============ 4. SEÇÃO DE DOR ============ -->
-<section id="clareza" aria-labelledby="clareza-title" class="relative">
-  <div class="max-w-2xl mx-auto px-5 sm:px-8 py-24 md:py-40">
-    <p class="reveal text-xs font-semibold tracking-[0.22em] uppercase text-gold-label mb-4 text-center">O diagnóstico</p>
-    <h2 id="clareza-title" class="reveal font-serif font-semibold text-navy text-center tracking-[-0.015em] leading-tight mb-14" style="font-size: clamp(1.9rem, 3.6vw, 2.8rem);">O que realmente precisa mudar na sua vida profissional?</h2>
-    <div class="space-y-5 text-[1.06rem] leading-relaxed text-ink/85">
-      <p class="reveal font-serif italic text-navy">Depois de quase duas décadas trabalhando em Recursos Humanos, conduzindo processos seletivos, liderando equipes e acompanhando profissionais em momentos decisivos da carreira, percebi um padrão.</p>
-      <p class="reveal">A maioria das pessoas acredita que precisa encontrar rapidamente uma resposta.</p>
-      <p class="reveal">Mas, na prática, está tentando responder a pergunta errada.</p>
-      <p class="reveal">Há profissionais que pensam que precisam mudar de carreira, quando o problema está na empresa.</p>
-      <p class="reveal">Outros acreditam que precisam pedir demissão, quando o que realmente falta é um ambiente onde consigam desenvolver todo o seu potencial.</p>
-      <p class="reveal">Também existem aqueles que permanecem anos no mesmo lugar por medo de desperdiçar tudo o que construíram.</p>
-      <p class="reveal">E há quem faça uma transição de carreira... apenas para descobrir, meses depois, que levou consigo a mesma insatisfação.</p>
-    </div>
-    <div class="reveal my-12 border-l-2 border-gold pl-6 sm:pl-8 py-2 space-y-3">
-      <p class="font-serif italic font-medium text-navy leading-snug" style="font-size: clamp(1.4rem, 2.8vw, 1.9rem);">O problema não costuma ser falta de coragem.</p>
-      <p class="font-serif italic font-medium text-navy leading-snug" style="font-size: clamp(1.4rem, 2.8vw, 1.9rem);">Na maioria das vezes, é falta de clareza.</p>
-    </div>
-    <div class="space-y-5 text-[1.06rem] leading-relaxed text-ink/85">
-      <p class="reveal">Foi justamente por observar esse padrão ao longo de tantos anos que desenvolvi o Método BÚSSOLA.</p>
-      <p class="reveal">Um método criado para ajudar profissionais a tomarem decisões importantes com mais clareza, estratégia e segurança.</p>
-      <p class="reveal">Porque, antes de decidir se você deve mudar de empresa, aceitar uma promoção, buscar uma recolocação, fazer uma transição de carreira ou melhorar sua performance, existe uma pergunta mais importante:</p>
-    </div>
-    <div class="mt-14 text-center space-y-4">
-      <p class="reveal font-serif italic font-medium text-ink/90" style="font-size: clamp(1.35rem, 2.6vw, 1.8rem);">O que realmente precisa ser mudado?</p>
-      <p class="reveal font-serif font-semibold text-navy leading-snug" style="font-size: clamp(1.55rem, 3vw, 2.15rem);">Toda boa decisão profissional começa com um bom diagnóstico.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 5. ORIGEM DO MÉTODO ============ -->
+<!-- ============ 3. ORIGEM DO MÉTODO ============ -->
 <section id="origem" aria-labelledby="origem-title" class="bg-panel border-y border-line">
-  <div class="max-w-3xl mx-auto px-5 sm:px-8 py-24 md:py-40">
-    <p class="reveal text-xs font-semibold tracking-[0.22em] uppercase text-gold-label mb-4">A origem</p>
-    <h2 id="origem-title" class="reveal font-serif font-semibold text-navy tracking-[-0.015em] leading-tight" style="font-size: clamp(1.9rem, 3.6vw, 2.8rem);">O Método BÚSSOLA nasceu de uma pergunta simples</h2>
-    <p class="reveal mt-6 font-serif italic text-ink/80 leading-snug" style="font-size: clamp(1.25rem, 2.4vw, 1.6rem);">Como alguém pode tomar uma decisão profissional importante sem antes compreender, com clareza, o que realmente está acontecendo?</p>
-    <div class="mt-10 space-y-5 text-[1.06rem] leading-relaxed text-ink/85">
-      <p class="reveal">Ao longo de quase duas décadas trabalhando em Recursos Humanos, acompanhei profissionais em diferentes momentos da carreira.</p>
-      <p class="reveal">Vi pessoas mudando de empresa sem necessidade.</p>
-      <p class="reveal">Profissionais abandonando carreiras que ainda faziam sentido.</p>
-      <p class="reveal">Líderes aceitando promoções que os afastavam completamente daquilo que sabiam e gostavam de fazer.</p>
-      <p class="reveal">Também vi pessoas extremamente competentes permanecendo durante anos em ambientes que drenavam sua energia, apenas porque acreditavam que mudar significaria perder tudo o que haviam construído.</p>
-      <p class="reveal">Foi a partir dessas experiências que desenvolvi o Método BÚSSOLA.</p>
-      <p class="reveal">Um processo estruturado de orientação profissional criado para ajudar você a compreender seu momento, organizar as possibilidades e tomar decisões com mais clareza, estratégia e segurança.</p>
-      <p class="reveal">O método não parte da ideia de que você precisa abandonar sua trajetória.</p>
-      <p class="reveal">Ele parte exatamente do princípio contrário.</p>
-      <p class="reveal">Sua experiência, suas qualificações, seus conhecimentos e as competências desenvolvidas ao longo dos anos são parte fundamental da próxima direção.</p>
-      <p class="reveal">Porque decisões profissionais importantes não deveriam depender apenas do medo, da ansiedade, do impulso ou da opinião de outras pessoas.</p>
+  <div class="max-w-5xl mx-auto px-5 sm:px-8 py-24 md:py-40">
+    <div class="max-w-3xl">
+      <p class="reveal text-xs font-semibold tracking-[0.22em] uppercase text-gold-label mb-4">A origem</p>
+      <h2 id="origem-title" class="reveal font-serif font-semibold text-navy tracking-[-0.015em] leading-tight" style="font-size: clamp(1.9rem, 3.6vw, 2.8rem);">O Método BÚSSOLA nasceu de uma pergunta simples</h2>
+      <p class="reveal mt-6 font-serif italic text-ink/80 leading-snug" style="font-size: clamp(1.25rem, 2.4vw, 1.6rem);">Como alguém pode tomar uma decisão profissional importante sem antes entender o que realmente está acontecendo?</p>
     </div>
-    <div class="reveal my-12 border-l-2 border-gold pl-6 sm:pl-8 py-2">
-      <p class="font-serif font-medium text-navy leading-[1.25]" style="font-size: clamp(1.5rem, 3vw, 2.1rem);">Elas precisam de critérios.<br>Precisam de estratégia.<br><span class="italic">Precisam de um processo</span> que ajude você a avaliar os riscos, reconhecer suas possibilidades e transformar toda a bagagem que já construiu em vantagem para o próximo passo.</p>
-    </div>
-    <div class="space-y-5 text-[1.06rem] leading-relaxed text-ink/85">
-      <p class="reveal">O Método BÚSSOLA não foi criado para dizer o que você deve fazer.</p>
-      <p class="reveal">Ele foi criado para ajudar você a tomar uma decisão consciente, segura e coerente com a realidade que já construiu.</p>
-    </div>
-    <div class="reveal mt-12">
-      <a href="https://wa.me/5519998585655?text=Ol%C3%A1%2C%20William!%20Quero%20descobrir%20minha%20pr%C3%B3xima%20dire%C3%A7%C3%A3o%20profissional.%20Gostaria%20de%20fazer%20a%20avalia%C3%A7%C3%A3o%20gratuita%20do%20M%C3%A9todo%20B%C3%9ASSOLA." target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-3 rounded-full px-7 py-4 text-sm sm:text-base font-semibold">
-        Quero descobrir minha próxima direção profissional
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
+    <div class="mt-10 md:mt-14 grid md:grid-cols-[minmax(0,1fr)_minmax(0,290px)] gap-12 md:gap-16 items-start">
+      <div class="space-y-5 text-[1.06rem] leading-relaxed text-ink/85">
+        <p class="reveal">Em quase duas décadas em Recursos Humanos, acompanhei profissionais tomando decisões precipitadas — mudanças de empresa desnecessárias, transições mal planejadas, permanências que drenavam energia por anos.</p>
+        <p class="reveal">O padrão era sempre o mesmo: não faltava coragem. Faltava um processo para pensar com clareza antes de agir.</p>
+        <div class="reveal !mt-10 border-l-2 border-gold pl-6 sm:pl-8 py-2">
+          <p class="font-serif font-medium text-navy leading-[1.25]" style="font-size: clamp(1.5rem, 3vw, 2.1rem);">Decisões profissionais importantes precisam de critérios, não de impulso. <span class="italic metodo-slip">Precisam de método.</span></p>
+        </div>
+        <p class="reveal !mt-10">O Método BÚSSOLA não diz o que você deve fazer. Ele estrutura o processo para que você tome uma decisão consciente, usando tudo o que já construiu como ponto de partida — não como peso.</p>
+      </div>
+      <figure class="reveal mx-auto w-full max-w-[290px] md:max-w-none">
+        <img src="assets/william-origem.webp" alt="William Gutierrez, criador do Método Bússola, segurando uma bússola dourada junto ao rosto" width="800" height="1200" loading="lazy" class="w-full h-auto rounded-2xl ring-1 ring-navy/10 shadow-[0_18px_44px_rgba(52,71,99,.16)]">
+      </figure>
     </div>
   </div>
 </section>
-<!-- ============ 6. VOCÊ NÃO PRECISA COMEÇAR DO ZERO ============ -->
+<!-- ============ 4. VOCÊ NÃO PRECISA COMEÇAR DO ZERO ============ -->
 <section id="bagagem" aria-labelledby="bagagem-title">
   <div class="max-w-7xl mx-auto px-5 sm:px-8 pt-24 md:pt-40 pb-16 md:pb-24">
     <div class="grid lg:grid-cols-2 gap-14 lg:gap-10 items-center">
-      <div class="reveal order-2 lg:order-1 flex justify-center" aria-hidden="true">
-        <svg viewBox="0 0 480 500" class="bag-chips w-full max-w-[480px] h-auto" role="img" aria-label="Ilustração de um profissional caminhando por uma estrada com uma mochila cheia de competências">
-          <!-- horizonte -->
-          <line x1="24" y1="225" x2="456" y2="225" stroke="#E4DDD3" stroke-width="1.5"/>
-          <circle cx="395" cy="166" r="31" fill="none" stroke="#D8BE86" stroke-width="1.5" opacity=".8"/>
-          <circle cx="395" cy="166" r="20" fill="#EDEAE4"/>
-          <!-- estrada -->
-          <path d="M155 500 C 195 420, 258 380, 246 320 C 238 280, 243 250, 242 225 L 260 225 C 261 252, 267 282, 280 322 C 298 380, 330 430, 350 500 Z" fill="#EDEAE4" stroke="#E4DDD3" stroke-width="1.5"/>
-          <path d="M251 233 C 253 258, 259 290, 269 326 C 284 380, 305 428, 320 488" fill="none" stroke="#B4924A" stroke-width="2" stroke-dasharray="10 12" stroke-linecap="round" opacity=".65"/>
-          <ellipse cx="258" cy="452" rx="36" ry="7" fill="rgba(52,71,99,0.08)"/>
-          <!-- figura caminhando -->
-          <g stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="258" cy="330" r="12" fill="#344763"/>
-            <path d="M245 346 C245 340 271 340 271 346 L273 390 C273 396 243 396 243 390 Z" fill="#344763"/>
-            <path d="M252 394 L242 424 L234 448" fill="none" stroke="#25334A" stroke-width="7.5"/>
-            <path d="M265 394 L275 422 L283 444" fill="none" stroke="#25334A" stroke-width="7.5"/>
-            <path d="M246 352 C236 364 233 376 237 386" fill="none" stroke="#344763" stroke-width="6.5"/>
-            <!-- mochila -->
-            <rect x="273" y="350" width="30" height="46" rx="10" fill="#1A6B52"/>
-            <path d="M273 364 H303" stroke="#D7E5DE" stroke-width="1.5"/>
-            <rect x="279" y="372" width="18" height="14" rx="4" fill="none" stroke="#D7E5DE" stroke-width="1.5"/>
-          </g>
-          <!-- arcos que ligam a mochila aos chips -->
-          <path d="M282 348 C 215 320, 140 255, 100 150" fill="none" stroke="#B4924A" stroke-width="1.5" stroke-dasharray="3 9" stroke-linecap="round" opacity=".5"/>
-          <path d="M296 348 C 350 315, 398 245, 408 148" fill="none" stroke="#B4924A" stroke-width="1.5" stroke-dasharray="3 9" stroke-linecap="round" opacity=".5"/>
-          <!-- chips de competências -->
-          <g class="bag-chip" style="transition-delay:.05s">
-            <rect x="30" y="118" width="152" height="36" rx="18" fill="#FFFFFF" stroke="#E4DDD3" stroke-width="1.5"/>
-            <g transform="translate(44,125)" stroke="#1A6B52" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M1 2.5 C4 1 7.5 1 11 2.5 C14.5 1 18 1 21 2.5 V15 C18 13.5 14.5 13.5 11 15 C7.5 13.5 4 13.5 1 15 Z"/><path d="M11 2.5 V15"/>
-            </g>
-            <text x="76" y="141" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#223245">Conhecimento</text>
-          </g>
-          <g class="bag-chip" style="transition-delay:.18s">
-            <rect x="174" y="58" width="138" height="36" rx="18" fill="#FFFFFF" stroke="#E4DDD3" stroke-width="1.5"/>
-            <g transform="translate(188,65)" stroke="#1A6B52" stroke-width="1.5" fill="none"><circle cx="11" cy="11" r="8.5"/><circle cx="11" cy="11" r="4.5"/><circle cx="11" cy="11" r="1" fill="#1A6B52"/></g>
-            <text x="220" y="81" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#223245">Resultados</text>
-          </g>
-          <g class="bag-chip" style="transition-delay:.31s">
-            <rect x="312" y="98" width="140" height="36" rx="18" fill="#FFFFFF" stroke="#E4DDD3" stroke-width="1.5"/>
-            <g transform="translate(326,105)" stroke="#1A6B52" stroke-width="1.5" fill="none" stroke-linecap="round"><circle cx="11" cy="11" r="8.5"/><path d="M11 6 V11 L14.5 13"/></g>
-            <text x="356" y="121" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#223245">Experiência</text>
-          </g>
-          <g class="bag-chip" style="transition-delay:.44s">
-            <rect x="12" y="206" width="158" height="36" rx="18" fill="#FFFFFF" stroke="#E4DDD3" stroke-width="1.5"/>
-            <g transform="translate(26,213)" stroke="#1A6B52" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2 H20 V12 H12 L7 16 V12 H2 Z"/></g>
-            <text x="56" y="229" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#223245">Comunicação</text>
-          </g>
-          <g class="bag-chip" style="transition-delay:.57s">
-            <rect x="334" y="214" width="134" height="36" rx="18" fill="#FFFFFF" stroke="#E4DDD3" stroke-width="1.5"/>
-            <g transform="translate(348,220)" stroke="#1A6B52" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22 V3 M4 4 H17 L14 8.5 L17 13 H4"/></g>
-            <text x="378" y="237" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#223245">Liderança</text>
-          </g>
-          <g class="bag-chip" style="transition-delay:.70s">
-            <rect x="34" y="292" width="112" height="36" rx="18" fill="#FFFFFF" stroke="#E4DDD3" stroke-width="1.5"/>
-            <g transform="translate(48,298)" stroke="#1A6B52" stroke-width="1.5" fill="none" stroke-linecap="round"><path d="M2 6 H20 M2 12 H20 M2 18 H20"/><circle cx="8" cy="6" r="2.4" fill="#FAF6F1"/><circle cx="15" cy="12" r="2.4" fill="#FAF6F1"/><circle cx="7" cy="18" r="2.4" fill="#FAF6F1"/></g>
-            <text x="78" y="315" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#223245">Gestão</text>
-          </g>
-          <g class="bag-chip" style="transition-delay:.83s">
-            <rect x="238" y="270" width="212" height="36" rx="18" fill="#FFFFFF" stroke="#E4DDD3" stroke-width="1.5"/>
-            <g transform="translate(252,276)" stroke="#1A6B52" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M11 1.5 A6.5 6.5 0 0 1 15.3 12.8 C14.4 13.6 13.8 14.3 13.8 15 H8.2 C8.2 14.3 7.6 13.6 6.7 12.8 A6.5 6.5 0 0 1 11 1.5 Z"/><path d="M8.5 18.5 H13.5 M9.3 21 H12.7"/></g>
-            <text x="282" y="293" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#223245">Resolução de problemas</text>
-          </g>
-        </svg>
+      <div class="reveal order-2 lg:order-1 flex justify-center">
+        <img src="assets/bagagem-mochila.webp" alt="Profissional de costas em uma estrada ao pôr do sol, carregando uma mochila com emblemas de competências: conhecimento, experiência, comunicação, liderança, gestão, resolução de problemas e resultados" width="960" height="1200" loading="lazy" class="w-full max-w-[480px] h-auto rounded-2xl ring-1 ring-navy/10 shadow-[0_18px_44px_rgba(52,71,99,.16)]">
       </div>
       <div class="order-1 lg:order-2">
         <p class="reveal text-xs font-semibold tracking-[0.22em] uppercase text-gold-label mb-4">Sua bagagem</p>
         <h2 id="bagagem-title" class="reveal font-serif font-semibold text-navy tracking-[-0.015em] leading-tight" style="font-size: clamp(1.9rem, 3.6vw, 2.8rem);">Você não precisa começar do zero.</h2>
-        <p class="reveal mt-5 text-lg text-muted leading-relaxed">A maior parte daquilo que tornou você um bom profissional continua com você, independentemente da empresa ou do cargo.</p>
+        <p class="reveal mt-5 text-lg text-muted leading-relaxed">Sua experiência, suas competências e os resultados que você gerou ao longo da carreira são ativos — não obstáculos.</p>
         <div class="mt-9 space-y-5 font-serif text-navy leading-[1.35]" style="font-size: clamp(1.2rem, 2.1vw, 1.5rem);">
-          <p class="reveal">O Método BÚSSOLA não parte da ideia de que você precisa abandonar sua história.</p>
-          <p class="reveal italic font-medium text-gold">Pelo contrário.</p>
-          <p class="reveal">Ele ajuda você a identificar quais competências, experiências e conhecimentos podem ser levados para a próxima direção profissional.</p>
-          <p class="reveal">Porque mudar de direção não significa começar do zero.</p>
-          <p class="reveal font-semibold">Significa construir o próximo capítulo usando tudo aquilo que você já desenvolveu.</p>
+          <p class="reveal">O Método BÚSSOLA identifica o que você já construiu e como isso pode ser levado para a próxima direção.</p>
+          <p class="reveal font-semibold">Mudar de direção não é apagar a história. É usá-la com inteligência.</p>
         </div>
       </div>
     </div>
@@ -518,7 +453,7 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ============ 7. CONHEÇA O MÉTODO BÚSSOLA ============ -->
+<!-- ============ 5. CONHEÇA O MÉTODO BÚSSOLA ============ -->
 <section id="metodo" aria-labelledby="metodo-title" class="bg-navy on-dark relative">
   <div class="max-w-7xl mx-auto px-5 sm:px-8 py-24 md:py-40">
     <div class="max-w-3xl">
@@ -527,13 +462,8 @@ tailwind.config = {
       <p class="reveal mt-6 text-lg text-muted-dark leading-relaxed">Um processo estruturado para ajudar você a tomar decisões profissionais importantes com clareza, estratégia e segurança, aproveitando toda a bagagem que construiu ao longo da sua carreira.</p>
     </div>
     <div class="mt-10 max-w-3xl space-y-4 text-[1.06rem] leading-relaxed text-muted-dark">
-      <p class="reveal">Existem muitas abordagens de orientação profissional.</p>
-      <p class="reveal">Algumas olham apenas para si mesmas.</p>
-      <p class="reveal">Outras olham apenas para o mercado.</p>
-      <p class="reveal text-cream-text">O Método BÚSSOLA foi desenvolvido para integrar essas duas perspectivas: quem você é, o que já construiu e onde suas competências podem gerar mais valor.</p>
-      <p class="reveal">Ao longo de sete etapas, o processo atravessa bloqueios, valores, saberes e sinais de mercado, até transformar compreensão em direção — e direção em ação.</p>
-      <p class="reveal">Porque decisões profissionais importantes não precisam de achismo.</p>
-      <p class="reveal font-serif italic text-xl text-gold-light">Elas precisam de método.</p>
+      <p class="reveal text-cream-text">O Método BÚSSOLA integra duas perspectivas que a maioria das abordagens trata separadamente: quem você é e onde o mercado valoriza o que você tem.</p>
+      <p class="reveal">Ao longo de sete etapas — identificadas pela sigla BÚSSOLA — o processo vai de bloqueios internos até a ação concreta, passando por valores, competências e leitura de mercado.</p>
     </div>
 
     <!-- Palco com scroll travado: bússola + um card por vez (desktop e mobile) -->
@@ -703,13 +633,13 @@ tailwind.config = {
         </li>
       </ol>
 
-    <div class="mt-16 md:mt-24 max-w-4xl mx-auto text-center border border-gold-light/25 rounded-3xl bg-navy-elev/40 px-6 sm:px-12 py-10 md:py-14">
+    <div class="-mt-10 md:-mt-24 max-w-4xl mx-auto text-center border border-gold-light/25 rounded-3xl bg-navy-elev/40 px-6 sm:px-12 py-10 md:py-14">
       <p class="reveal font-serif text-cream-text leading-[1.35]" style="font-size: clamp(1.3rem, 2.6vw, 1.9rem);">O Método BÚSSOLA não foi criado para dizer qual carreira você deve seguir. Ele foi criado para ajudar você a tomar decisões profissionais importantes com <em class="italic text-gold-light">clareza, método e segurança</em>, aproveitando tudo o que já construiu até aqui.</p>
     </div>
   </div>
 </section>
-<!-- ============ 8. RESULTADOS ============ -->
-<section id="resultados" aria-labelledby="resultados-title">
+<!-- ============ 6. RESULTADOS ============ -->
+<section id="resultados" aria-labelledby="resultados-title" class="bg-panel border-y border-line">
   <div class="max-w-7xl mx-auto px-5 sm:px-8 py-24 md:py-40">
     <div class="max-w-3xl mx-auto text-center">
       <p class="reveal text-xs font-semibold tracking-[0.22em] uppercase text-gold-label mb-4">Resultados</p>
@@ -761,49 +691,12 @@ tailwind.config = {
       </li>
     </ul>
     <div class="reveal mt-14 max-w-3xl mx-auto text-center">
-      <p class="font-serif italic text-navy leading-snug" style="font-size: clamp(1.25rem, 2.4vw, 1.7rem);">O maior resultado do Método BÚSSOLA não é apenas ajudar você a tomar uma decisão importante hoje. É ensinar um processo para que você <span class="font-semibold not-italic">nunca mais precise decidir no escuro.</span></p>
+      <p class="font-serif italic text-navy leading-snug" style="font-size: clamp(1.25rem, 2.4vw, 1.7rem);">Mais do que resolver uma decisão, o Método BÚSSOLA entrega um processo — para que você <span class="font-semibold not-italic">nunca mais precise decidir no escuro.</span></p>
     </div>
   </div>
 </section>
 
-<!-- ============ 9. PARA VOCÊ? ============ -->
-<section id="para-voce" aria-labelledby="para-voce-title" class="bg-panel border-y border-line">
-  <div class="max-w-7xl mx-auto px-5 sm:px-8 py-24 md:py-40">
-    <div class="max-w-3xl">
-      <p class="reveal text-xs font-semibold tracking-[0.22em] uppercase text-gold-label mb-4">Critérios</p>
-      <h2 id="para-voce-title" class="reveal font-serif font-semibold text-navy tracking-[-0.015em] leading-tight" style="font-size: clamp(1.9rem, 3.6vw, 2.8rem);">O Método BÚSSOLA é para você?</h2>
-      <p class="reveal mt-5 text-lg text-muted leading-relaxed">Este método foi desenvolvido para profissionais que sentem que chegou o momento de tomar uma decisão importante na vida profissional, mas não querem fazer isso apenas pela emoção, pelo impulso ou pelo medo.</p>
-    </div>
-    <div class="mt-12 grid lg:grid-cols-2 gap-6">
-      <div class="reveal bg-card border border-line rounded-3xl p-7 sm:p-9 shadow-soft">
-        <h3 class="font-serif font-semibold text-navy text-xl">O Método BÚSSOLA pode ajudar você se hoje...</h3>
-        <ul class="mt-6 space-y-4" role="list">
-          <li class="flex items-start gap-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg><span class="text-ink/90 leading-relaxed">Precisa decidir se permanece ou se muda de empresa.</span></li>
-          <li class="flex items-start gap-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg><span class="text-ink/90 leading-relaxed">Está pensando em fazer uma transição de carreira.</span></li>
-          <li class="flex items-start gap-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg><span class="text-ink/90 leading-relaxed">Busca uma recolocação profissional com estratégia.</span></li>
-          <li class="flex items-start gap-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg><span class="text-ink/90 leading-relaxed">Está diante de uma promoção ou de um novo desafio.</span></li>
-          <li class="flex items-start gap-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg><span class="text-ink/90 leading-relaxed">Quer melhorar sua performance com intenção.</span></li>
-          <li class="flex items-start gap-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg><span class="text-ink/90 leading-relaxed">Sente que precisa recuperar o sentido do seu trabalho.</span></li>
-          <li class="flex items-start gap-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".35"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg><span class="text-ink/90 leading-relaxed">Sabe que precisa decidir — e quer decidir com método, não por impulso.</span></li>
-        </ul>
-      </div>
-      <div class="reveal bg-panel border border-line rounded-3xl p-7 sm:p-9">
-        <h3 class="font-serif font-medium text-muted text-xl">O Método BÚSSOLA talvez não seja para você se...</h3>
-        <ul class="mt-6 space-y-4" role="list">
-          <li class="flex items-start gap-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6A7484" stroke-width="1.5" stroke-linecap="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".4"/><path d="M9 9 L15 15 M15 9 L9 15"/></svg><span class="text-muted leading-relaxed">Você busca apenas uma resposta pronta sobre qual carreira seguir.</span></li>
-          <li class="flex items-start gap-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6A7484" stroke-width="1.5" stroke-linecap="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".4"/><path d="M9 9 L15 15 M15 9 L9 15"/></svg><span class="text-muted leading-relaxed">Prefere decidir por impulso, sem analisar cenários e consequências.</span></li>
-          <li class="flex items-start gap-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6A7484" stroke-width="1.5" stroke-linecap="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".4"/><path d="M9 9 L15 15 M15 9 L9 15"/></svg><span class="text-muted leading-relaxed">Espera que alguém tome a decisão no seu lugar.</span></li>
-          <li class="flex items-start gap-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6A7484" stroke-width="1.5" stroke-linecap="round" class="mt-0.5 shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".4"/><path d="M9 9 L15 15 M15 9 L9 15"/></svg><span class="text-muted leading-relaxed">Não está disposto a dedicar tempo e reflexão ao processo.</span></li>
-        </ul>
-      </div>
-    </div>
-    <div class="reveal mt-10 bg-sage border border-pine/15 rounded-2xl px-6 sm:px-10 py-7 text-center">
-      <p class="font-serif italic text-navy leading-snug" style="font-size: clamp(1.15rem, 2.2vw, 1.5rem);">O Método BÚSSOLA foi criado para profissionais que desejam tomar decisões importantes com consciência, estratégia e segurança — não apenas encontrar respostas rápidas.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 10. SOBRE O WILLIAM ============ -->
+<!-- ============ 7. SOBRE O WILLIAM ============ -->
 <section id="sobre" aria-labelledby="sobre-title">
   <div class="max-w-7xl mx-auto px-5 sm:px-8 py-24 md:py-40">
     <div class="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] gap-12 lg:gap-16 items-start">
@@ -827,15 +720,11 @@ tailwind.config = {
       <div class="reveal lg:pt-24">
         <div class="space-y-5 text-[1.06rem] leading-relaxed text-ink/85">
           <p class="font-serif italic text-navy text-xl">Meu nome é William Gutierrez.</p>
-          <p>Sou psicólogo e, há quase duas décadas, acompanho pessoas em um dos momentos mais difíceis da vida profissional: tomar decisões importantes sobre a própria carreira.</p>
-          <p>Durante esse período, vivi os dois lados dessa realidade.</p>
-          <p>Atuei em Recursos Humanos dentro de grandes organizações, participei de milhares de entrevistas, acompanhei processos de contratação, desenvolvimento e promoção de profissionais, liderei equipes e ajudei empresas a tomarem decisões que impactaram centenas de carreiras.</p>
-          <p>Mas também acompanhei pessoas do outro lado da mesa.</p>
-          <p>Profissionais competentes, experientes e talentosos que, mesmo com uma trajetória sólida, não conseguiam responder uma pergunta simples:</p>
+          <p>Sou psicólogo com quase duas décadas de experiência em Recursos Humanos — processos seletivos, desenvolvimento de lideranças, gestão de pessoas e orientação profissional.</p>
+          <p>Acompanhei profissionais dos dois lados: como gestor que tomava decisões sobre carreiras, e como orientador de pessoas que precisavam decidir os próprios próximos passos.</p>
+          <p>O que mais vi nesses anos foi gente competente, com trajetória sólida, travada diante de uma pergunta aparentemente simples:</p>
           <p class="font-serif italic font-medium text-navy border-l-2 border-gold pl-6 py-1" style="font-size: clamp(1.25rem, 2.3vw, 1.6rem);">"Qual deve ser meu próximo passo?"</p>
-          <p>Foi dessa combinação entre Psicologia, experiência corporativa e desenvolvimento humano que nasceu o Método BÚSSOLA.</p>
-          <p>Um processo criado para ajudar profissionais a tomarem decisões importantes com clareza, estratégia e segurança, sem desperdiçar toda a bagagem construída ao longo da carreira.</p>
-          <p>Hoje, meu trabalho é ajudar pessoas a encontrarem sua próxima direção profissional sem precisarem começar do zero.</p>
+          <p>O Método BÚSSOLA nasceu dessa experiência. Um processo para ajudar profissionais a tomarem decisões com consciência — usando tudo que já construíram como ponto de partida.</p>
         </div>
       </div>
     </div>
@@ -852,40 +741,82 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ============ 11. DEPOIMENTOS ============ -->
+<!-- ============ 8. DEPOIMENTOS ============ -->
 <section id="depoimentos" aria-labelledby="depoimentos-title" class="bg-panel border-y border-line">
   <div class="max-w-7xl mx-auto px-5 sm:px-8 py-24 md:py-40">
     <div class="max-w-3xl mx-auto text-center">
-      <p class="reveal text-xs font-semibold tracking-[0.22em] uppercase text-gold-label mb-4">Depoimentos</p>
-      <h2 id="depoimentos-title" class="reveal font-serif font-semibold text-navy tracking-[-0.015em] leading-tight" style="font-size: clamp(1.9rem, 3.6vw, 2.8rem);">Decisões diferentes. Um mesmo método.</h2>
+      <p class="reveal text-xs font-semibold tracking-[0.22em] uppercase text-gold-label mb-4">Decisões diferentes. Um mesmo método.</p>
+      <h2 id="depoimentos-title" class="reveal font-serif font-semibold text-navy tracking-[-0.015em] leading-tight" style="font-size: clamp(1.9rem, 3.6vw, 2.8rem);">DEPOIMENTOS</h2>
       <p class="reveal mt-5 text-lg text-muted leading-relaxed">O Método BÚSSOLA já ajudou profissionais em momentos muito diferentes da carreira.</p>
     </div>
     <ul class="stagger-group mt-14 grid sm:grid-cols-2 gap-5" role="list">
-      <li class="reveal card-hover bg-card border border-line rounded-2xl p-7 sm:p-8 shadow-soft">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="#B4924A" aria-hidden="true" class="mb-4 opacity-80"><path d="M4 14 C4 9.5 6.5 6 10.5 4.5 L11.2 6 C8.5 7.3 7 9.3 6.8 11.5 C7.1 11.3 7.6 11.2 8.1 11.2 C9.7 11.2 11 12.5 11 14.2 C11 15.9 9.7 17.2 8 17.2 C5.9 17.2 4 15.9 4 14 Z M13 14 C13 9.5 15.5 6 19.5 4.5 L20.2 6 C17.5 7.3 16 9.3 15.8 11.5 C16.1 11.3 16.6 11.2 17.1 11.2 C18.7 11.2 20 12.5 20 14.2 C20 15.9 18.7 17.2 17 17.2 C14.9 17.2 13 15.9 13 14 Z"/></svg>
-        <h3 class="font-serif italic font-semibold text-navy text-xl leading-snug">"Descobri que eu não precisava mudar de carreira."</h3>
-        <p class="mt-3 text-muted leading-relaxed">Eu estava convencido de que precisava abandonar minha profissão. Durante o processo, percebi que o problema era o ambiente onde eu trabalhava. Mudei de empresa e recuperei completamente minha motivação.</p>
+      <li class="reveal card-hover bg-card border border-line rounded-2xl p-7 sm:p-8 shadow-soft flex flex-col">
+        <h3 class="font-serif font-semibold text-navy text-xl leading-snug sm:min-h-[3.44rem]">Descobriu que o problema não era a profissão</h3>
+        <p class="mt-5 text-muted leading-relaxed flex-1">"Cheguei ao processo convicta de que precisava abandonar o marketing. Estava esgotada, sem motivação, questionando tudo que havia construído em 12 anos. O que descobri durante o processo foi diferente do que esperava: o problema não era minha profissão. Era o ambiente onde eu estava. Três meses depois de mudar de empresa, recuperei a vontade de trabalhar. Não precisei recomeçar do zero. Precisei entender o que estava, de fato, me esgotando."</p>
+        <div class="mt-6 pt-5 border-t border-line flex items-center gap-3.5">
+          <span class="flex items-center justify-center w-11 h-11 rounded-full bg-pine text-cream-text text-sm font-bold shrink-0" aria-hidden="true">RS</span>
+          <div>
+            <p class="font-semibold text-ink text-sm leading-tight">Renata S.</p>
+            <p class="text-muted text-xs mt-1 leading-tight">38 anos · Gestora de Marketing</p>
+          </div>
+        </div>
       </li>
-      <li class="reveal card-hover bg-card border border-line rounded-2xl p-7 sm:p-8 shadow-soft">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="#B4924A" aria-hidden="true" class="mb-4 opacity-80"><path d="M4 14 C4 9.5 6.5 6 10.5 4.5 L11.2 6 C8.5 7.3 7 9.3 6.8 11.5 C7.1 11.3 7.6 11.2 8.1 11.2 C9.7 11.2 11 12.5 11 14.2 C11 15.9 9.7 17.2 8 17.2 C5.9 17.2 4 15.9 4 14 Z M13 14 C13 9.5 15.5 6 19.5 4.5 L20.2 6 C17.5 7.3 16 9.3 15.8 11.5 C16.1 11.3 16.6 11.2 17.1 11.2 C18.7 11.2 20 12.5 20 14.2 C20 15.9 18.7 17.2 17 17.2 C14.9 17.2 13 15.9 13 14 Z"/></svg>
-        <h3 class="font-serif italic font-semibold text-navy text-xl leading-snug">"Achei que fosse começar do zero."</h3>
-        <p class="mt-3 text-muted leading-relaxed">O Método BÚSSOLA me mostrou que minhas competências continuavam valiosas. Fiz uma transição muito mais segura do que imaginava.</p>
+      <li class="reveal card-hover bg-card border border-line rounded-2xl p-7 sm:p-8 shadow-soft flex flex-col">
+        <h3 class="font-serif font-semibold text-navy text-xl leading-snug sm:min-h-[3.44rem]">Fez transição usando o que já tinha</h3>
+        <p class="mt-5 text-muted leading-relaxed flex-1">"Sempre tive vontade de trabalhar com pessoas, mas achava que isso significaria abandonar tudo que aprendi como engenheiro. O processo me ajudou a enxergar que minha experiência técnica era exatamente o que me diferenciava para atuar em gestão e desenvolvimento de equipes industriais. Fiz a transição sem perder relevância no mercado. O que mudou foi a direção, não a bagagem."</p>
+        <div class="mt-6 pt-5 border-t border-line flex items-center gap-3.5">
+          <span class="flex items-center justify-center w-11 h-11 rounded-full bg-pine text-cream-text text-sm font-bold shrink-0" aria-hidden="true">MT</span>
+          <div>
+            <p class="font-semibold text-ink text-sm leading-tight">Marcos T.</p>
+            <p class="text-muted text-xs mt-1 leading-tight">42 anos · Engenheiro de Produção</p>
+          </div>
+        </div>
       </li>
-      <li class="reveal card-hover bg-card border border-line rounded-2xl p-7 sm:p-8 shadow-soft">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="#B4924A" aria-hidden="true" class="mb-4 opacity-80"><path d="M4 14 C4 9.5 6.5 6 10.5 4.5 L11.2 6 C8.5 7.3 7 9.3 6.8 11.5 C7.1 11.3 7.6 11.2 8.1 11.2 C9.7 11.2 11 12.5 11 14.2 C11 15.9 9.7 17.2 8 17.2 C5.9 17.2 4 15.9 4 14 Z M13 14 C13 9.5 15.5 6 19.5 4.5 L20.2 6 C17.5 7.3 16 9.3 15.8 11.5 C16.1 11.3 16.6 11.2 17.1 11.2 C18.7 11.2 20 12.5 20 14.2 C20 15.9 18.7 17.2 17 17.2 C14.9 17.2 13 15.9 13 14 Z"/></svg>
-        <h3 class="font-serif italic font-semibold text-navy text-xl leading-snug">"Finalmente consegui decidir."</h3>
-        <p class="mt-3 text-muted leading-relaxed">O maior resultado não foi apenas escolher um caminho. Foi parar de viver na dúvida todos os dias.</p>
+      <li class="reveal card-hover bg-card border border-line rounded-2xl p-7 sm:p-8 shadow-soft flex flex-col">
+        <h3 class="font-serif font-semibold text-navy text-xl leading-snug sm:min-h-[3.44rem]">Saiu da paralisia</h3>
+        <p class="mt-5 text-muted leading-relaxed flex-1">"Eu sabia que algo precisava mudar há pelo menos dois anos. Mas ficava travada entre o medo de errar e o medo de continuar do mesmo jeito. O que o processo me deu não foi uma resposta pronta. Foi um conjunto de critérios para eu mesma avaliar as opções com mais clareza. Pela primeira vez, tomei uma decisão de carreira sem precisar que alguém me dissesse o que fazer."</p>
+        <div class="mt-6 pt-5 border-t border-line flex items-center gap-3.5">
+          <span class="flex items-center justify-center w-11 h-11 rounded-full bg-pine text-cream-text text-sm font-bold shrink-0" aria-hidden="true">FO</span>
+          <div>
+            <p class="font-semibold text-ink text-sm leading-tight">Fernanda O.</p>
+            <p class="text-muted text-xs mt-1 leading-tight">35 anos · Advogada</p>
+          </div>
+        </div>
       </li>
-      <li class="reveal card-hover bg-card border border-line rounded-2xl p-7 sm:p-8 shadow-soft">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="#B4924A" aria-hidden="true" class="mb-4 opacity-80"><path d="M4 14 C4 9.5 6.5 6 10.5 4.5 L11.2 6 C8.5 7.3 7 9.3 6.8 11.5 C7.1 11.3 7.6 11.2 8.1 11.2 C9.7 11.2 11 12.5 11 14.2 C11 15.9 9.7 17.2 8 17.2 C5.9 17.2 4 15.9 4 14 Z M13 14 C13 9.5 15.5 6 19.5 4.5 L20.2 6 C17.5 7.3 16 9.3 15.8 11.5 C16.1 11.3 16.6 11.2 17.1 11.2 C18.7 11.2 20 12.5 20 14.2 C20 15.9 18.7 17.2 17 17.2 C14.9 17.2 13 15.9 13 14 Z"/></svg>
-        <h3 class="font-serif italic font-semibold text-navy text-xl leading-snug">"Voltei a enxergar minha carreira com clareza."</h3>
-        <p class="mt-3 text-muted leading-relaxed">Depois de anos trabalhando no piloto automático, consegui construir um plano que fazia sentido para minha realidade.</p>
+      <li class="reveal card-hover bg-card border border-line rounded-2xl p-7 sm:p-8 shadow-soft flex flex-col">
+        <h3 class="font-serif font-semibold text-navy text-xl leading-snug sm:min-h-[3.44rem]">Profissional que quase aceitou a promoção errada</h3>
+        <p class="mt-5 text-muted leading-relaxed flex-1">"Estava prestes a aceitar uma promoção para diretor quando decidi passar pelo processo antes. Durante as sessões, percebi que o cargo me afastaria completamente do que eu mais gosto de fazer. Recusei a promoção. Isso foi difícil de explicar para as pessoas ao redor, mas foi a decisão mais consciente que já tomei na carreira. Quatro meses depois, surgiu outra oportunidade dentro da mesma empresa, um cargo que combinava liderança comercial com desenvolvimento de equipes, exatamente onde eu queria estar. Dessa vez, aceitei sem hesitar."</p>
+        <div class="mt-6 pt-5 border-t border-line flex items-center gap-3.5">
+          <span class="flex items-center justify-center w-11 h-11 rounded-full bg-pine text-cream-text text-sm font-bold shrink-0" aria-hidden="true">CM</span>
+          <div>
+            <p class="font-semibold text-ink text-sm leading-tight">Carlos M.</p>
+            <p class="text-muted text-xs mt-1 leading-tight">44 anos · Gerente Comercial</p>
+          </div>
+        </div>
+      </li>
+      <li class="reveal card-hover bg-card border border-line rounded-2xl p-7 sm:p-8 shadow-soft flex flex-col">
+        <h3 class="font-serif font-semibold text-navy text-xl leading-snug sm:min-h-[3.44rem]">Recuperou o sentido do trabalho</h3>
+        <p class="mt-5 text-muted leading-relaxed flex-1">"Não estava pensando em mudar de emprego nem de carreira. Estava pensando em largar tudo e não sabia por quê. O processo me ajudou a entender que havia perdido conexão com o propósito do que faço, não com a profissão em si. Ressignifiquei minha função dentro da empresa onde já estava. Às vezes a resposta não está lá fora. Está em enxergar diferente o que você já tem."</p>
+        <div class="mt-6 pt-5 border-t border-line flex items-center gap-3.5">
+          <span class="flex items-center justify-center w-11 h-11 rounded-full bg-pine text-cream-text text-sm font-bold shrink-0" aria-hidden="true">JR</span>
+          <div>
+            <p class="font-semibold text-ink text-sm leading-tight">Juliana R.</p>
+            <p class="text-muted text-xs mt-1 leading-tight">39 anos · Coordenadora de RH</p>
+          </div>
+        </div>
+      </li>
+      <li class="reveal card-hover bg-card border border-line rounded-2xl p-7 sm:p-8 shadow-soft flex flex-col">
+        <span class="inline-flex w-11 h-11 rounded-full bg-panel items-center justify-center mb-5" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A6B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        </span>
+        <h3 class="font-serif font-semibold text-navy text-xl leading-snug">Seu futuro depoimento</h3>
+        <p class="mt-3 text-muted leading-relaxed">A próxima história de decisão com clareza, estratégia e segurança pode ser a sua.</p>
       </li>
     </ul>
     <p class="reveal mt-12 max-w-3xl mx-auto text-center font-serif italic text-navy leading-snug" style="font-size: clamp(1.2rem, 2.3vw, 1.6rem);">Cada pessoa chega ao Método BÚSSOLA com uma dúvida diferente. Mas todas têm o mesmo objetivo: tomar uma decisão profissional importante com mais clareza, estratégia e segurança.</p>
   </div>
 </section>
-<!-- ============ 12. A JORNADA ============ -->
+<!-- ============ 9. A JORNADA ============ -->
 <section id="jornada" aria-labelledby="jornada-title">
   <div class="max-w-7xl mx-auto px-5 sm:px-8 py-24 md:py-40">
     <div class="max-w-3xl">
@@ -971,11 +902,10 @@ tailwind.config = {
         </li>
       </ul>
     </div>
-    <p class="reveal mt-14 max-w-3xl mx-auto text-center font-serif italic text-navy leading-snug" style="font-size: clamp(1.2rem, 2.3vw, 1.6rem);">O objetivo do Método BÚSSOLA não é apenas ajudar você a tomar uma boa decisão hoje. É entregar um processo e um conjunto de ferramentas para que você <span class="font-semibold not-italic">nunca mais precise decidir no escuro.</span></p>
   </div>
 </section>
 
-<!-- ============ 13. CTA FINAL ============ -->
+<!-- ============ 10. CTA FINAL ============ -->
 <section id="comecar" aria-labelledby="cta-title" class="bg-navy on-dark relative overflow-hidden">
   <svg class="watermark -right-32 -top-32 w-[560px] h-[560px] rotate-12" viewBox="0 0 440 440" fill="none" aria-hidden="true">
     <circle cx="220" cy="220" r="204" stroke="#F5F1EA" stroke-width="1.5"/>
@@ -994,7 +924,7 @@ tailwind.config = {
     <h2 id="cta-title" class="reveal font-serif font-semibold text-cream-text tracking-[-0.015em] leading-[1.15]" style="font-size: clamp(2rem, 4.4vw, 3.4rem);">Clareza não vem do tempo.<br><em class="italic text-gold-light">Vem do método certo.</em></h2>
     <div class="reveal mt-10">
       <a href="https://wa.me/5519998585655?text=Ol%C3%A1%2C%20William!%20Quero%20descobrir%20minha%20pr%C3%B3xima%20dire%C3%A7%C3%A3o%20profissional.%20Gostaria%20de%20fazer%20a%20avalia%C3%A7%C3%A3o%20gratuita%20do%20M%C3%A9todo%20B%C3%9ASSOLA." target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-3 rounded-full px-8 py-4 text-sm sm:text-base font-bold tracking-wide">
-        Quero descobrir minha próxima direção profissional
+        Fazer minha avaliação GRATUITA
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
       <p class="mt-5 text-sm text-muted-dark max-w-md mx-auto leading-relaxed">A avaliação é gratuita, leva cerca de 5 minutos e é o primeiro passo para entender qual pode ser sua próxima direção profissional.</p>
@@ -1003,13 +933,13 @@ tailwind.config = {
 </section>
 </main>
 
-<!-- ============ 14. RODAPÉ ============ -->
+<!-- ============ 11. RODAPÉ ============ -->
 <footer class="bg-navy-deep on-dark" aria-label="Rodapé">
   <div class="max-w-7xl mx-auto px-5 sm:px-8 pt-16 md:pt-20 pb-10">
     <div class="grid gap-12 md:grid-cols-[1.3fr_1fr_1.2fr_.8fr]">
       <div>
         <a href="#inicio" class="flex items-center gap-3" aria-label="Método Bússola — voltar ao início">
-          <img src="assets/logo-bussola.png" alt="" width="34" height="34" class="shrink-0 w-9 h-9 object-contain">
+          <img src="assets/logo-bussola.webp" alt="" width="34" height="34" class="shrink-0 w-9 h-9 object-contain">
           <span class="font-serif font-semibold tracking-tight text-cream-text leading-none">MÉTODO <span class="text-gold-light">BÚSSOLA</span></span>
         </a>
         <p class="mt-5 text-sm text-muted-dark leading-relaxed max-w-xs">Clareza não vem do tempo. Vem do método certo.</p>
@@ -1125,21 +1055,6 @@ tailwind.config = {
     revealEls.forEach(function (el) { revealIO.observe(el); });
   }
 
-  /* ---------- Chips da mochila (seção 6) ---------- */
-  var bag = document.querySelector('.bag-chips');
-  if (bag) {
-    if (reduceMotion || !('IntersectionObserver' in window)) {
-      bag.classList.add('is-visible');
-    } else {
-      var bagIO = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) { bag.classList.add('is-visible'); bagIO.disconnect(); }
-        });
-      }, { threshold: 0.35 });
-      bagIO.observe(bag);
-    }
-  }
-
   /* ---------- Bússola do método: agulha + etapas ---------- */
   var STEP_ANGLE = 360 / 7;
   var needle = document.getElementById('methodNeedle');
@@ -1190,6 +1105,73 @@ tailwind.config = {
         if (target) target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
       }
     });
+  });
+})();
+</script>
+<script>
+/* Marca-texto da hero: um traço por linha, em ordem de leitura, em qualquer largura */
+(function () {
+  var el = document.getElementById('heroMarker');
+  if (!el) return;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var text = el.textContent.trim();
+
+  function buildLines(animate) {
+    /* 1) envolve cada palavra para medir onde as linhas quebram */
+    el.textContent = '';
+    var words = text.split(/\s+/);
+    var wordSpans = words.map(function (w) {
+      var s = document.createElement('span');
+      s.textContent = w;
+      el.appendChild(s);
+      el.appendChild(document.createTextNode(' '));
+      return s;
+    });
+    /* 2) agrupa palavras por linha (mesmo offsetTop) */
+    var lines = [], current = [], top = null;
+    wordSpans.forEach(function (s) {
+      if (top === null || Math.abs(s.offsetTop - top) < 2) { current.push(s); top = s.offsetTop; }
+      else { lines.push(current); current = [s]; top = s.offsetTop; }
+    });
+    if (current.length) lines.push(current);
+    /* 3) reconstrói: um span .marker por linha, traços em sequência */
+    el.textContent = '';
+    var t = 900; /* espera o título assentar */
+    lines.forEach(function (lineWords, i) {
+      var m = document.createElement('span');
+      m.className = 'marker';
+      m.textContent = lineWords.map(function (s) { return s.textContent; }).join(' ');
+      var dur = Math.max(380, m.textContent.length * 26); /* velocidade constante de "caneta" */
+      if (animate) {
+        m.style.animationDelay = (t / 1000) + 's';
+        m.style.animationDuration = (dur / 1000) + 's';
+        t += dur + 25; /* pausa mínima entre traços */
+      } else {
+        m.style.animation = 'none';
+        m.style.backgroundSize = '100% 78%';
+      }
+      el.appendChild(m);
+      if (i < lines.length - 1) el.appendChild(document.createTextNode(' '));
+    });
+  }
+
+  if (reduceMotion) { buildLines(false); return; }
+
+  /* mede só depois das fontes carregarem (com fallback de segurança) */
+  var done = false;
+  function start() { if (!done) { done = true; buildLines(true); } }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(start);
+    setTimeout(start, 1600);
+  } else {
+    start();
+  }
+
+  /* ao redimensionar, redesenha as linhas já no estado final (sem reanimar) */
+  var rt;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () { buildLines(false); }, 250);
   });
 })();
 </script>
