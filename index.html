@@ -5,8 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Método BÚSSOLA — Escolha sua próxima direção profissional sem recomeçar do zero</title>
 <meta name="description" content="O Método BÚSSOLA é um processo estruturado de orientação profissional conduzido por William Gutierrez, para ajudar você a tomar decisões importantes de carreira com clareza, estratégia e segurança.">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<noscript><style>#methodStage{display:none!important}.steps-timeline{display:block!important}.reveal,.bag-chip{opacity:1!important;transform:none!important}</style></noscript>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -93,15 +97,15 @@ tailwind.config = {
   .reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s ease, transform .8s cubic-bezier(.22,.61,.36,1); will-change: opacity, transform; }
   .reveal.is-visible { opacity: 1; transform: none; }
 
-  /* Agulha do hero — oscilação sutil */
-  .needle-sway {
-    transform-box: fill-box;
+  /* Rosa dos ventos do hero — flutuação sutil, sombra seguindo o contorno */
+  .hero-compass {
+    filter: drop-shadow(0 24px 50px rgba(52,71,99,0.16));
+    animation: hero-float 9s ease-in-out infinite;
     transform-origin: center;
-    animation: needle-sway 6s ease-in-out infinite;
   }
-  @keyframes needle-sway {
-    0%, 100% { transform: rotate(-6deg); }
-    50% { transform: rotate(7deg); }
+  @keyframes hero-float {
+    0%, 100% { transform: translateY(0) rotate(-0.6deg); }
+    50% { transform: translateY(-10px) rotate(0.8deg); }
   }
 
   /* Agulha da bússola do método — gira por scroll */
@@ -174,20 +178,39 @@ tailwind.config = {
     .step-item.is-active .step-panel { transform: translateY(-2px); }
   }
 
-  /* Palco do método: altura determina a duração do scroll travado */
+  /* Palco do método (todas as telas): altura determina a duração do scroll travado */
+  #methodStage { height: 560vh; }
+  .deck-wrap { min-height: 360px; }
+  .deck-card {
+    position: absolute; inset: 0;
+    opacity: 0; transform: translateY(26px);
+    transition: opacity .55s ease, transform .55s cubic-bezier(.22,.61,.36,1);
+    pointer-events: none;
+  }
+  .deck-card.is-active { opacity: 1; transform: none; pointer-events: auto; }
+  .deck-card.is-active .step-letter {
+    background: #B4924A; color: #25334A;
+    box-shadow: 0 0 0 6px rgba(180,146,74,.16);
+  }
   @media (min-width: 768px) {
-    #methodStage { height: 560vh; }
-    .deck-card {
-      position: absolute; inset: 0;
-      opacity: 0; transform: translateY(26px);
-      transition: opacity .55s ease, transform .55s cubic-bezier(.22,.61,.36,1);
-      pointer-events: none;
+    .deck-wrap { min-height: 380px; }
+  }
+  /* Celulares baixos (paisagem/SE): bússola e deck mais compactos */
+  @media (max-width: 767px) and (max-height: 720px) {
+    #compassWrap { max-width: 172px !important; }
+    .deck-wrap { min-height: 300px; }
+    .deck-card h3 { font-size: 1.55rem !important; }
+  }
+
+  /* Mobile: botões da bússola proporcionais ao tamanho dela (nunca ultrapassam o limite) */
+  @media (max-width: 767px) {
+    #compassWrap { container-type: inline-size; }
+    .compass-point {
+      width: 14cqw; height: 14cqw;
+      margin-left: -7cqw; margin-top: -7cqw;
+      font-size: 5.4cqw;
     }
-    .deck-card.is-active { opacity: 1; transform: none; pointer-events: auto; }
-    .deck-card.is-active .step-letter {
-      background: #B4924A; color: #25334A;
-      box-shadow: 0 0 0 6px rgba(180,146,74,.16);
-    }
+    .compass-point[aria-selected="true"] { transform: scale(1.1); }
   }
 
   /* Linha do tempo mobile */
@@ -198,7 +221,7 @@ tailwind.config = {
       width: 1.5px; background: linear-gradient(to bottom, rgba(216,190,134,.15), rgba(216,190,134,.55), rgba(216,190,134,.15));
     }
     .step-item { position: relative; }
-    .step-letter { position: absolute; left: -3.4rem; top: .35rem; }
+    .steps-timeline .step-letter { position: absolute; left: -3.4rem; top: .35rem; }
   }
 
   /* Chips da mochila (seção 6) */
@@ -243,15 +266,7 @@ tailwind.config = {
 <header id="navbar" class="fixed top-0 left-0 right-0 z-50">
   <div class="nav-inner max-w-7xl mx-auto px-5 sm:px-8 py-4 sm:py-5 flex items-center justify-between gap-4">
     <a href="#inicio" class="flex items-center gap-3 shrink-0" aria-label="Método Bússola — voltar ao início">
-      <svg width="34" height="34" viewBox="0 0 48 48" fill="none" aria-hidden="true" class="shrink-0">
-        <circle cx="24" cy="24" r="21" stroke="#344763" stroke-width="1.5"/>
-        <circle cx="24" cy="24" r="15.5" stroke="#B4924A" stroke-width="1"/>
-        <path d="M24 6 L26.5 21.5 L24 24 L21.5 21.5 Z" fill="#344763"/>
-        <path d="M24 42 L21.5 26.5 L24 24 L26.5 26.5 Z" fill="#B4924A"/>
-        <path d="M6 24 L21.5 21.5 L24 24 L21.5 26.5 Z" fill="#B4924A" opacity=".55"/>
-        <path d="M42 24 L26.5 26.5 L24 24 L26.5 21.5 Z" fill="#344763" opacity=".55"/>
-        <circle cx="24" cy="24" r="2.2" fill="#FAF6F1" stroke="#344763" stroke-width="1.2"/>
-      </svg>
+      <img src="assets/logo-bussola.png" alt="" width="40" height="40" class="shrink-0 w-10 h-10 object-contain">
       <span class="font-serif font-semibold tracking-tight text-navy text-base sm:text-lg leading-none">MÉTODO <span class="text-gold">BÚSSOLA</span></span>
     </a>
     <nav class="hidden lg:flex items-center gap-8" aria-label="Navegação principal">
@@ -307,42 +322,8 @@ tailwind.config = {
         <p class="mt-4 text-sm text-muted max-w-md leading-relaxed">A avaliação é gratuita, leva cerca de 5 minutos e é o primeiro passo para entender qual pode ser sua próxima direção profissional.</p>
       </div>
     </div>
-    <div class="reveal relative flex items-center justify-center" aria-hidden="true">
-      <svg viewBox="0 0 440 440" class="w-full max-w-[440px] h-auto drop-shadow-[0_24px_50px_rgba(52,71,99,0.14)]" role="img" aria-label="Rosa dos ventos decorativa">
-        <defs>
-          <radialGradient id="dial" cx="50%" cy="42%" r="68%">
-            <stop offset="0%" stop-color="#FFFFFF"/>
-            <stop offset="82%" stop-color="#FAF6F1"/>
-            <stop offset="100%" stop-color="#EDEAE4"/>
-          </radialGradient>
-        </defs>
-        <circle cx="220" cy="220" r="204" fill="url(#dial)" stroke="#E4DDD3" stroke-width="1.5"/>
-        <circle cx="220" cy="220" r="188" fill="none" stroke="#344763" stroke-width="1.5" opacity=".9"/>
-        <circle cx="220" cy="220" r="176" fill="none" stroke="#B4924A" stroke-width="1" opacity=".7"/>
-        <g stroke="#344763" stroke-width="1.2" opacity=".55">
-          <line x1="220" y1="40" x2="220" y2="56"/><line x1="220" y1="400" x2="220" y2="384"/>
-          <line x1="40" y1="220" x2="56" y2="220"/><line x1="400" y1="220" x2="384" y2="220"/>
-          <line x1="92.7" y1="92.7" x2="104" y2="104"/><line x1="347.3" y1="347.3" x2="336" y2="336"/>
-          <line x1="347.3" y1="92.7" x2="336" y2="104"/><line x1="92.7" y1="347.3" x2="104" y2="336"/>
-        </g>
-        <g font-family="Fraunces, serif" font-weight="600" fill="#344763" text-anchor="middle">
-          <text x="220" y="88" font-size="26">N</text>
-          <text x="360" y="228" font-size="20" fill="#8A6E2F">L</text>
-          <text x="220" y="366" font-size="20" fill="#8A6E2F">S</text>
-          <text x="80" y="228" font-size="20" fill="#8A6E2F">O</text>
-        </g>
-        <g opacity=".9">
-          <path d="M220 118 L236 204 L322 220 L236 236 L220 322 L204 236 L118 220 L204 204 Z" fill="#EDEAE4" stroke="#B4924A" stroke-width="1"/>
-          <path d="M291 149 L236 204 L220 220 L204 236 L149 291 L196 244 L244 196 Z" fill="#FAF6F1" stroke="#B4924A" stroke-width=".8" opacity=".9"/>
-          <path d="M291 291 L236 236 L220 220 L204 204 L149 149 L196 196 L244 244 Z" fill="#FAF6F1" stroke="#B4924A" stroke-width=".8" opacity=".9"/>
-        </g>
-        <g class="needle-sway">
-          <path d="M220 96 L234 220 L220 240 L206 220 Z" fill="#344763"/>
-          <path d="M220 344 L206 220 L220 200 L234 220 Z" fill="#B4924A"/>
-          <circle cx="220" cy="220" r="14" fill="#FAF6F1" stroke="#344763" stroke-width="1.5"/>
-          <circle cx="220" cy="220" r="5" fill="#B4924A"/>
-        </g>
-      </svg>
+    <div class="reveal relative flex items-center justify-center">
+      <img src="assets/hero-compass.webp" alt="Rosa dos ventos do Método Bússola, com o monograma WG ao centro" width="1000" height="1000" class="hero-compass w-full max-w-[460px] h-auto" fetchpriority="high">
     </div>
   </div>
 </section>
@@ -555,12 +536,12 @@ tailwind.config = {
       <p class="reveal font-serif italic text-xl text-gold-light">Elas precisam de método.</p>
     </div>
 
-    <!-- Palco desktop: scroll travado, um card por vez ao lado da bússola -->
-    <div id="methodStage" class="hidden md:block relative mt-16 md:mt-24">
+    <!-- Palco com scroll travado: bússola + um card por vez (desktop e mobile) -->
+    <div id="methodStage" class="relative mt-14 md:mt-24">
       <div class="sticky top-0 h-screen flex items-center overflow-hidden">
-        <div class="max-w-7xl mx-auto w-full px-8 grid grid-cols-[minmax(0,5fr)_minmax(0,6fr)] gap-10 items-center">
-      <div>
-        <div id="compassWrap" class="relative w-full max-w-[430px] mx-auto aspect-square" role="group" aria-label="Etapas do Método Bússola">
+        <div class="max-w-7xl mx-auto w-full px-5 sm:px-8 grid grid-cols-1 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] gap-6 md:gap-10 items-center">
+      <div class="flex flex-col items-center">
+        <div id="compassWrap" class="relative w-full max-w-[225px] md:max-w-[430px] mx-auto aspect-square" role="group" aria-label="Etapas do Método Bússola">
           <svg viewBox="0 0 430 430" class="w-full h-full" aria-hidden="true">
             <circle cx="215" cy="215" r="200" fill="rgba(70,85,110,.35)" stroke="rgba(245,241,234,.14)" stroke-width="1.5"/>
             <circle cx="215" cy="215" r="182" fill="none" stroke="rgba(216,190,134,.4)" stroke-width="1"/>
@@ -591,72 +572,72 @@ tailwind.config = {
           <button type="button" class="compass-point" style="left:9.1%; top:59.4%;" data-index="5" aria-selected="false" aria-label="Etapa L — Lançamento">L</button>
           <button type="button" class="compass-point" style="left:17.1%; top:23.8%;" data-index="6" aria-selected="false" aria-label="Etapa A — Acompanhamento">A</button>
         </div>
-        <p class="mt-6 text-center text-sm text-muted-dark">Percorra as etapas — a agulha acompanha o seu caminho.</p>
+        <p class="mt-6 hidden md:block text-center text-sm text-muted-dark">Percorra as etapas — a agulha acompanha o seu caminho.</p>
       </div>
-      <div class="relative" style="min-height: 380px;" aria-live="polite">
+      <div class="deck-wrap relative" aria-live="polite">
         <article class="deck-card is-active" data-index="0" aria-hidden="false">
-          <div class="flex items-center gap-4 mb-6">
+          <div class="flex items-center gap-4 mb-4 md:mb-6">
             <span class="step-letter shrink-0 w-12 h-12 rounded-full bg-navy-elev text-gold-light font-serif font-semibold text-lg flex items-center justify-center border border-gold-light/30" aria-hidden="true">B</span>
             <span class="text-xs font-semibold tracking-[0.22em] uppercase text-gold-light/70">Etapa 1 de 7</span>
           </div>
           <h3 class="font-serif font-semibold text-cream-text tracking-tight" style="font-size: clamp(1.8rem, 2.6vw, 2.5rem);">Bloqueios</h3>
-          <p class="mt-5 text-muted-dark leading-relaxed text-lg max-w-xl">Identificamos aquilo que está impedindo você de avançar. Crenças limitantes, medos, histórias que você passou a acreditar e padrões que podem estar influenciando suas decisões profissionais sem que você perceba.</p>
+          <p class="mt-3 md:mt-5 text-muted-dark leading-relaxed text-[0.95rem] md:text-lg max-w-xl">Identificamos aquilo que está impedindo você de avançar. Crenças limitantes, medos, histórias que você passou a acreditar e padrões que podem estar influenciando suas decisões profissionais sem que você perceba.</p>
         </article>
         <article class="deck-card" data-index="1" aria-hidden="true">
-          <div class="flex items-center gap-4 mb-6">
+          <div class="flex items-center gap-4 mb-4 md:mb-6">
             <span class="step-letter shrink-0 w-12 h-12 rounded-full bg-navy-elev text-gold-light font-serif font-semibold text-lg flex items-center justify-center border border-gold-light/30" aria-hidden="true">U</span>
             <span class="text-xs font-semibold tracking-[0.22em] uppercase text-gold-light/70">Etapa 2 de 7</span>
           </div>
           <h3 class="font-serif font-semibold text-cream-text tracking-tight" style="font-size: clamp(1.8rem, 2.6vw, 2.5rem);">Universo Interno</h3>
-          <p class="mt-5 text-muted-dark leading-relaxed text-lg max-w-xl">Descobrimos o que realmente faz sentido para você. Mapeamos seus valores, interesses, motivadores e aquilo que dá significado ao seu trabalho, para que sua decisão seja coerente com quem você é hoje.</p>
+          <p class="mt-3 md:mt-5 text-muted-dark leading-relaxed text-[0.95rem] md:text-lg max-w-xl">Descobrimos o que realmente faz sentido para você. Mapeamos seus valores, interesses, motivadores e aquilo que dá significado ao seu trabalho, para que sua decisão seja coerente com quem você é hoje.</p>
         </article>
         <article class="deck-card" data-index="2" aria-hidden="true">
-          <div class="flex items-center gap-4 mb-6">
+          <div class="flex items-center gap-4 mb-4 md:mb-6">
             <span class="step-letter shrink-0 w-12 h-12 rounded-full bg-navy-elev text-gold-light font-serif font-semibold text-lg flex items-center justify-center border border-gold-light/30" aria-hidden="true">S</span>
             <span class="text-xs font-semibold tracking-[0.22em] uppercase text-gold-light/70">Etapa 3 de 7</span>
           </div>
           <h3 class="font-serif font-semibold text-cream-text tracking-tight" style="font-size: clamp(1.8rem, 2.6vw, 2.5rem);">Saberes</h3>
-          <p class="mt-5 text-muted-dark leading-relaxed text-lg max-w-xl">Resgatamos toda a bagagem que você já construiu. Identificamos competências, talentos, conhecimentos, experiências e resultados que podem ser aproveitados na sua próxima direção profissional. Porque você não precisa começar do zero.</p>
+          <p class="mt-3 md:mt-5 text-muted-dark leading-relaxed text-[0.95rem] md:text-lg max-w-xl">Resgatamos toda a bagagem que você já construiu. Identificamos competências, talentos, conhecimentos, experiências e resultados que podem ser aproveitados na sua próxima direção profissional. Porque você não precisa começar do zero.</p>
         </article>
         <article class="deck-card" data-index="3" aria-hidden="true">
-          <div class="flex items-center gap-4 mb-6">
+          <div class="flex items-center gap-4 mb-4 md:mb-6">
             <span class="step-letter shrink-0 w-12 h-12 rounded-full bg-navy-elev text-gold-light font-serif font-semibold text-lg flex items-center justify-center border border-gold-light/30" aria-hidden="true">S</span>
             <span class="text-xs font-semibold tracking-[0.22em] uppercase text-gold-light/70">Etapa 4 de 7</span>
           </div>
           <h3 class="font-serif font-semibold text-cream-text tracking-tight" style="font-size: clamp(1.8rem, 2.6vw, 2.5rem);">Sinais de Mercado</h3>
-          <p class="mt-5 text-muted-dark leading-relaxed text-lg max-w-xl">Conectamos sua história às oportunidades do mercado. Analisamos tendências, possibilidades e demandas para identificar onde suas competências podem gerar mais valor e quais caminhos fazem sentido para o seu perfil.</p>
+          <p class="mt-3 md:mt-5 text-muted-dark leading-relaxed text-[0.95rem] md:text-lg max-w-xl">Conectamos sua história às oportunidades do mercado. Analisamos tendências, possibilidades e demandas para identificar onde suas competências podem gerar mais valor e quais caminhos fazem sentido para o seu perfil.</p>
         </article>
         <article class="deck-card" data-index="4" aria-hidden="true">
-          <div class="flex items-center gap-4 mb-6">
+          <div class="flex items-center gap-4 mb-4 md:mb-6">
             <span class="step-letter shrink-0 w-12 h-12 rounded-full bg-navy-elev text-gold-light font-serif font-semibold text-lg flex items-center justify-center border border-gold-light/30" aria-hidden="true">O</span>
             <span class="text-xs font-semibold tracking-[0.22em] uppercase text-gold-light/70">Etapa 5 de 7</span>
           </div>
           <h3 class="font-serif font-semibold text-cream-text tracking-tight" style="font-size: clamp(1.8rem, 2.6vw, 2.5rem);">Orientação</h3>
-          <p class="mt-5 text-muted-dark leading-relaxed text-lg max-w-xl">Transformamos informação em direção. Depois de compreender quem você é e o que o mercado busca, construímos uma estratégia clara para que você tome sua decisão com segurança.</p>
+          <p class="mt-3 md:mt-5 text-muted-dark leading-relaxed text-[0.95rem] md:text-lg max-w-xl">Transformamos informação em direção. Depois de compreender quem você é e o que o mercado busca, construímos uma estratégia clara para que você tome sua decisão com segurança.</p>
         </article>
         <article class="deck-card" data-index="5" aria-hidden="true">
-          <div class="flex items-center gap-4 mb-6">
+          <div class="flex items-center gap-4 mb-4 md:mb-6">
             <span class="step-letter shrink-0 w-12 h-12 rounded-full bg-navy-elev text-gold-light font-serif font-semibold text-lg flex items-center justify-center border border-gold-light/30" aria-hidden="true">L</span>
             <span class="text-xs font-semibold tracking-[0.22em] uppercase text-gold-light/70">Etapa 6 de 7</span>
           </div>
           <h3 class="font-serif font-semibold text-cream-text tracking-tight" style="font-size: clamp(1.8rem, 2.6vw, 2.5rem);">Lançamento</h3>
-          <p class="mt-5 text-muted-dark leading-relaxed text-lg max-w-xl">Transformamos a decisão em ação. Definimos um plano prático para que você coloque sua estratégia em movimento, seja em uma transição de carreira, uma recolocação, uma promoção ou um novo desafio profissional.</p>
+          <p class="mt-3 md:mt-5 text-muted-dark leading-relaxed text-[0.95rem] md:text-lg max-w-xl">Transformamos a decisão em ação. Definimos um plano prático para que você coloque sua estratégia em movimento, seja em uma transição de carreira, uma recolocação, uma promoção ou um novo desafio profissional.</p>
         </article>
         <article class="deck-card" data-index="6" aria-hidden="true">
-          <div class="flex items-center gap-4 mb-6">
+          <div class="flex items-center gap-4 mb-4 md:mb-6">
             <span class="step-letter shrink-0 w-12 h-12 rounded-full bg-navy-elev text-gold-light font-serif font-semibold text-lg flex items-center justify-center border border-gold-light/30" aria-hidden="true">A</span>
             <span class="text-xs font-semibold tracking-[0.22em] uppercase text-gold-light/70">Etapa 7 de 7</span>
           </div>
           <h3 class="font-serif font-semibold text-cream-text tracking-tight" style="font-size: clamp(1.8rem, 2.6vw, 2.5rem);">Acompanhamento</h3>
-          <p class="mt-5 text-muted-dark leading-relaxed text-lg max-w-xl">Apoiamos você durante a implementação. Porque uma boa decisão só gera resultados quando é colocada em prática. Durante esse processo, você conta com acompanhamento para ajustar a rota sempre que necessário.</p>
+          <p class="mt-3 md:mt-5 text-muted-dark leading-relaxed text-[0.95rem] md:text-lg max-w-xl">Apoiamos você durante a implementação. Porque uma boa decisão só gera resultados quando é colocada em prática. Durante esse processo, você conta com acompanhamento para ajustar a rota sempre que necessário.</p>
         </article>
       </div>
         </div>
       </div>
     </div>
 
-    <!-- Linha do tempo (mobile) -->
-    <ol class="steps-timeline space-y-4 mt-16 md:hidden" role="list">
+    <!-- Fallback sem JS: linha do tempo com todas as etapas (reexibida via <noscript>) -->
+    <ol class="steps-timeline space-y-4 mt-16 hidden" role="list">
         <li class="step-item arc-0 is-active reveal" data-index="0">
           <div class="flex items-start gap-4 md:gap-5">
             <span class="step-letter shrink-0 w-11 h-11 md:w-12 md:h-12 rounded-full bg-navy-elev text-gold-light font-serif font-semibold text-lg flex items-center justify-center border border-gold-light/30" aria-hidden="true">B</span>
@@ -840,7 +821,7 @@ tailwind.config = {
             <span class="font-serif text-cream-text text-xl">William Gutierrez</span>
             <span class="text-muted-dark text-sm">Psicólogo · Criador do Método BÚSSOLA</span>
           </div>
-          <img src="william-gutierrez.jpg" alt="Retrato de William Gutierrez, psicólogo e criador do Método Bússola" class="w-full h-full object-cover" loading="lazy" onerror="this.remove()">
+          <img src="assets/william-gutierrez.webp" alt="Retrato de William Gutierrez, psicólogo e criador do Método Bússola" class="w-full h-full object-cover" loading="lazy" onerror="this.remove()">
         </div>
       </div>
       <div class="reveal lg:pt-24">
@@ -1028,13 +1009,7 @@ tailwind.config = {
     <div class="grid gap-12 md:grid-cols-[1.3fr_1fr_1.2fr_.8fr]">
       <div>
         <a href="#inicio" class="flex items-center gap-3" aria-label="Método Bússola — voltar ao início">
-          <svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-            <circle cx="24" cy="24" r="21" stroke="#D8BE86" stroke-width="1.5"/>
-            <circle cx="24" cy="24" r="15.5" stroke="#F5F1EA" stroke-width="1" opacity=".5"/>
-            <path d="M24 6 L26.5 21.5 L24 24 L21.5 21.5 Z" fill="#D8BE86"/>
-            <path d="M24 42 L21.5 26.5 L24 24 L26.5 26.5 Z" fill="#B9C3D2"/>
-            <circle cx="24" cy="24" r="2.2" fill="#25334A" stroke="#D8BE86" stroke-width="1.2"/>
-          </svg>
+          <img src="assets/logo-bussola.png" alt="" width="34" height="34" class="shrink-0 w-9 h-9 object-contain">
           <span class="font-serif font-semibold tracking-tight text-cream-text leading-none">MÉTODO <span class="text-gold-light">BÚSSOLA</span></span>
         </a>
         <p class="mt-5 text-sm text-muted-dark leading-relaxed max-w-xs">Clareza não vem do tempo. Vem do método certo.</p>
@@ -1172,7 +1147,6 @@ tailwind.config = {
   var steps = Array.prototype.slice.call(document.querySelectorAll('.step-item'));
   var deckCards = Array.prototype.slice.call(document.querySelectorAll('.deck-card'));
   var stage = document.getElementById('methodStage');
-  var mqDesktop = window.matchMedia('(min-width: 768px)');
   var activeIndex = 0;
 
   function setActive(i, opts) {
@@ -1189,9 +1163,9 @@ tailwind.config = {
   }
   setActive(0, { force: true });
 
-  /* Desktop: a tela "trava" no palco — o progresso do scroll define a etapa */
+  /* A tela "trava" no palco — o progresso do scroll define a etapa (desktop e mobile) */
   function onStageScroll() {
-    if (!stage || !mqDesktop.matches) return;
+    if (!stage) return;
     var rect = stage.getBoundingClientRect();
     var total = stage.offsetHeight - window.innerHeight;
     if (total <= 0) return;
@@ -1207,7 +1181,7 @@ tailwind.config = {
     p.addEventListener('click', function () {
       var i = parseInt(p.getAttribute('data-index'), 10);
       setActive(i);
-      if (stage && mqDesktop.matches) {
+      if (stage) {
         var total = stage.offsetHeight - window.innerHeight;
         var top = stage.getBoundingClientRect().top + window.scrollY;
         window.scrollTo({ top: top + (total / 7) * i + 2, behavior: reduceMotion ? 'auto' : 'smooth' });
@@ -1217,16 +1191,6 @@ tailwind.config = {
       }
     });
   });
-
-  /* Mobile: a linha do tempo atualiza a etapa ativa conforme o scroll */
-  if ('IntersectionObserver' in window && steps.length) {
-    var stepIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) setActive(parseInt(entry.target.getAttribute('data-index'), 10));
-      });
-    }, { rootMargin: '-42% 0px -42% 0px', threshold: 0 });
-    steps.forEach(function (s) { stepIO.observe(s); });
-  }
 })();
 </script>
 </body>
