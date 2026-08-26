@@ -219,14 +219,18 @@ tailwind.config = {
 
   /* Hero mobile compacta: CTA acima da dobra + amostra da seção seguinte */
   @media (max-width: 767px) {
-    #inicio { min-height: calc(100vh - 40px); min-height: calc(100svh - 40px); }
+    #inicio { min-height: calc(100vh - 40px); min-height: calc(100svh - 40px); display: flex; flex-direction: column; }
+    #inicio .hero-grid { flex: 1 0 auto; display: flex; flex-direction: column; }
+    #inicio .hero-grid > div:first-child { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
     #comecar { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
     #hero-title { font-size: clamp(1.85rem, 8.8vw, 2.15rem) !important; line-height: 1.06; }
+    .hero-label { margin-bottom: .875rem !important; }
     .hero-intro { font-size: .84rem !important; }
-    #inicio .max-w-xl { margin-top: .875rem !important; }
+    #inicio .max-w-xl { margin-top: 2rem !important; }
     #inicio ul { margin-top: .625rem !important; }
     #inicio ul li span { font-size: .85rem; }
     #inicio ul li svg { width: 17px; height: 17px; }
+    .hero-cta-wrap { margin-top: 2.25rem !important; }
     .hero-micro { font-size: .75rem !important; line-height: 1.45 !important; margin-top: 1rem !important; }
     .hero-banner-inner { height: 140px !important; }
     .banner-photo {
@@ -238,7 +242,8 @@ tailwind.config = {
   @media (max-width: 767px) and (max-height: 820px) {
     .hero-banner-inner { height: 120px !important; }
     .hero-grid { padding-top: .75rem !important; padding-bottom: 1.25rem !important; }
-    #inicio .max-w-xl { margin-top: .75rem !important; }
+    #inicio .max-w-xl { margin-top: 1.25rem !important; }
+    .hero-cta-wrap { margin-top: 1.75rem !important; }
     #inicio ul { row-gap: .4rem !important; margin-top: .5rem !important; }
     .hero-label { margin-bottom: .5rem !important; }
   }
@@ -249,10 +254,18 @@ tailwind.config = {
     .hero-grid { padding-top: .75rem !important; padding-bottom: 1rem !important; }
     .hero-label { margin-bottom: .5rem !important; }
     .hero-intro { font-size: .78rem !important; }
+    #inicio .max-w-xl { margin-top: 1.25rem !important; }
     #inicio ul { row-gap: .35rem !important; margin-top: .4rem !important; }
     #inicio ul li span { font-size: .8rem; }
     .hero-micro { font-size: .72rem !important; margin-top: .75rem !important; }
-    .hero-cta-wrap { margin-top: 1rem !important; }
+    .hero-cta-wrap { margin-top: 1.5rem !important; }
+  }
+  /* Celulares altos (a partir de 820px): tipografia cresce para acompanhar o espaço */
+  @media (max-width: 767px) and (min-height: 820px) {
+    #hero-title { font-size: clamp(2rem, 9.4vw, 2.4rem) !important; }
+    .hero-intro { font-size: .9rem !important; }
+    #inicio ul li span { font-size: .9rem; }
+    .hero-micro { font-size: .78rem !important; }
   }
 
   /* Linha do tempo mobile */
@@ -371,8 +384,10 @@ tailwind.config = {
   </div>
   <div class="hero-grid max-w-7xl mx-auto px-5 sm:px-8 pt-5 md:pt-40 pb-8 md:pb-36 grid lg:grid-cols-[1.08fr_.92fr] gap-14 lg:gap-8 items-center">
     <div>
-      <p class="reveal text-xs font-semibold tracking-[0.22em] uppercase text-gold-label mb-3 md:mb-6">Orientação profissional com método</p>
-      <h1 id="hero-title" class="reveal font-serif font-semibold text-navy leading-[1.04] tracking-[-0.02em]" style="font-size: clamp(2.5rem, 5.6vw, 4.4rem);">Escolha sua próxima direção profissional <em class="italic font-medium" id="heroMarker">sem recomeçar do zero.</em></h1>
+      <div class="hero-head">
+        <p class="reveal hero-label text-xs font-semibold tracking-[0.22em] uppercase text-gold-label mb-3 md:mb-6">Orientação profissional com método</p>
+        <h1 id="hero-title" class="reveal font-serif font-semibold text-navy leading-[1.04] tracking-[-0.02em]" style="font-size: clamp(2.5rem, 5.6vw, 4.4rem);">Escolha sua próxima direção profissional <em class="italic font-medium" id="heroMarker">sem recomeçar do zero.</em></h1>
+      </div>
       <div class="reveal mt-5 md:mt-8 max-w-xl">
         <p class="hero-intro text-lg text-ink leading-relaxed">O <strong class="font-bold">Método BÚSSOLA</strong> te ajuda a:</p>
         <ul class="mt-4 md:mt-5 grid gap-y-2.5 md:gap-y-3.5" role="list">
