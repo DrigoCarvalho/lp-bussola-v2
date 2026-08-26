@@ -219,6 +219,8 @@ tailwind.config = {
 
   /* Hero mobile compacta: CTA acima da dobra + amostra da seção seguinte */
   @media (max-width: 767px) {
+    #inicio { min-height: calc(100vh - 40px); min-height: calc(100svh - 40px); }
+    #comecar { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
     #hero-title { font-size: clamp(1.85rem, 8.8vw, 2.15rem) !important; line-height: 1.06; }
     .hero-intro { font-size: .84rem !important; }
     #inicio .max-w-xl { margin-top: .875rem !important; }
