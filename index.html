@@ -247,16 +247,21 @@ tailwind.config = {
     .hero-label { margin-bottom: .5rem !important; }
     .hero-micro { font-size: .75rem !important; margin: .75rem auto 0 !important; }
   }
-  /* Telas muito baixas (iPhone SE / paisagem): banner e espaçamentos ainda mais compactos */
-  @media (max-width: 767px) and (max-height: 689px) {
-    #hero-title { font-size: clamp(1.55rem, 7.2vw, 1.7rem) !important; }
+  /* Alturas até 729px (iPhone Pro com barras do Safari, Android com barra): título 34px */
+  @media (max-width: 767px) and (max-height: 729px) {
+    #hero-title { font-size: 2.125rem !important; }
     .hero-grid { padding-top: .75rem !important; padding-bottom: 1rem !important; }
     .hero-label { margin-bottom: .5rem !important; }
-    .hero-intro { font-size: .78rem !important; }
     #inicio .hero-grid > div:first-child { gap: 1rem; }
     #inicio ul { row-gap: .35rem !important; margin-top: .4rem !important; }
+    .hero-micro { font-size: .75rem !important; margin: .75rem auto 0 !important; }
+  }
+  /* Telas muito baixas (iPhone SE 1ª geração / telas minúsculas): modo de sobrevivência */
+  @media (max-width: 767px) and (max-height: 639px) {
+    #hero-title { font-size: clamp(1.55rem, 7.2vw, 1.7rem) !important; }
+    .hero-intro { font-size: .78rem !important; }
     #inicio ul li span { font-size: .8rem; }
-    .hero-micro { font-size: .72rem !important; margin: .75rem auto 0 !important; }
+    .hero-micro { font-size: .72rem !important; }
   }
 
   /* Linha do tempo mobile */
