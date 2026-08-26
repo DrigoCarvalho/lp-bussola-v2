@@ -224,7 +224,7 @@ tailwind.config = {
     #inicio .hero-grid > div:first-child { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; gap: 1.25rem; }
     #inicio .max-w-xl, .hero-cta-wrap { margin-top: 0 !important; }
     #comecar { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
-    #hero-title { font-size: clamp(1.85rem, 10.3vw, 3.125rem) !important; line-height: 1.06; }
+    #hero-title { font-size: clamp(1.85rem, 10vw, 3.125rem) !important; line-height: 1.06; }
     .hero-label { margin-bottom: .875rem !important; }
     .hero-intro { font-size: 1.06rem !important; }
     #inicio ul { margin-top: .625rem !important; }
@@ -238,19 +238,17 @@ tailwind.config = {
       mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
     }
   }
-  /* Celulares de altura intermediária (680–820px, ex.: iPhone Pro com barras do Safari): título em 3 linhas */
+  /* Celulares de altura intermediária (690–820px, ex.: iPhone Pro com barras do Safari): banner compacto p/ caber o título grande; microcopy pode ficar na borda */
   @media (max-width: 767px) and (max-height: 820px) {
-    .hero-banner-inner { height: 120px !important; }
+    .hero-banner-inner { height: 96px !important; }
     .hero-grid { padding-top: .5rem !important; padding-bottom: 1rem !important; }
-    #hero-title { font-size: clamp(1.85rem, 8vw, 2.1rem) !important; }
     #inicio .hero-grid > div:first-child { gap: 1.125rem; }
     #inicio ul { row-gap: .35rem !important; margin-top: .5rem !important; }
     .hero-label { margin-bottom: .5rem !important; }
     .hero-micro { font-size: .75rem !important; margin: .75rem auto 0 !important; }
   }
   /* Telas muito baixas (iPhone SE / paisagem): banner e espaçamentos ainda mais compactos */
-  @media (max-width: 767px) and (max-height: 679px) {
-    .hero-banner-inner { height: 96px !important; }
+  @media (max-width: 767px) and (max-height: 689px) {
     #hero-title { font-size: clamp(1.55rem, 7.2vw, 1.7rem) !important; }
     .hero-grid { padding-top: .75rem !important; padding-bottom: 1rem !important; }
     .hero-label { margin-bottom: .5rem !important; }
