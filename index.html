@@ -228,9 +228,25 @@ tailwind.config = {
      Como fonte e medidas do texto escalam juntas com a tela, o título sempre
      quebra nas MESMAS 3 linhas e ocupa a MESMA fração da tela em qualquer aparelho */
   @media (max-width: 767px) {
-    #inicio { min-height: calc(100vh - 16px); min-height: calc(100svh - 16px); display: flex; flex-direction: column; }
+    /* Header enxuta no mobile: 52px (era 76px) → sobra espaço p/ os elementos do hero */
+    #navbar .nav-inner { padding-top: .5rem !important; padding-bottom: .5rem !important; }
+    #navbar.nav-scrolled .nav-inner { padding-top: .4rem !important; padding-bottom: .4rem !important; }
+    #navbar .nav-inner img { width: 32px !important; height: 32px !important; }
+    #navbar .nav-inner span.font-serif { font-size: .875rem !important; }
+    #menuBtn { width: 2.25rem !important; height: 2.25rem !important; }
+    #menuBtn svg { width: 20px; height: 20px; }
+
+    /* Altura FIXA = 100svh − 16px → a fatia da próxima seção é garantida matematicamente.
+       O conteúdo é rígido (flex-shrink: 0): quem absorve o déficit em telas curtas é o
+       banner (flex-shrink: 1), que encolhe de 20svh até o piso de 48px — nada é cortado */
+    #inicio { height: calc(100vh - 16px); height: calc(100svh - 16px); display: flex; flex-direction: column; }
+    /* Banner do William = 20% da altura da viewport (elástico: cede quando falta espaço) */
+    .hero-banner { margin-top: 52px !important; height: 20vh; height: 20svh; flex: 0 1 auto; min-height: 48px; }
+    .hero-banner-inner { height: 100% !important; }
     #inicio .hero-grid { flex: 1 0 auto; display: flex; flex-direction: column; padding-left: 6vw !important; padding-right: 6vw !important; }
-    #inicio .hero-grid > div:first-child { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; gap: 1.25rem; }
+    /* Regra de respiro: espaço entre os blocos do hero ≥ 2× o vão entre as linhas do corpo
+       (1.06rem × 1.625 = 27.6px de linha → vão de 10.6px → mínimo 21.2px → adotado 22px) */
+    #inicio .hero-grid > div:first-child { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; gap: 1.375rem; }
     #inicio .max-w-xl, .hero-cta-wrap { margin-top: 0 !important; }
     #comecar { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
     #hero-title { font-size: 8.45vw !important; line-height: 1.06; }
@@ -241,7 +257,6 @@ tailwind.config = {
     #inicio ul li svg { width: 19px; height: 19px; }
     #inicio .hero-cta-wrap { text-align: center; }
     .hero-micro { font-size: .78rem !important; line-height: 1.45 !important; margin: 1rem auto 0 !important; }
-    .hero-banner-inner { height: 140px !important; }
     .banner-photo {
       -webkit-mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
       mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
@@ -249,23 +264,37 @@ tailwind.config = {
   }
   /* Alturas até 820px (iPhone Pro com barras do Safari, Android com barra): banner compacto e espaçamentos enxutos — fontes NÃO mudam (acopladas ao sistema) */
   @media (max-width: 767px) and (max-height: 820px) {
-    .hero-banner-inner { height: 23.9vw !important; }
-    .hero-grid { padding-top: .5rem !important; padding-bottom: 1rem !important; }
-    #inicio .hero-grid > div:first-child { gap: 1rem; }
-    #inicio ul { row-gap: .35rem !important; margin-top: .5rem !important; }
-    .hero-label { margin-bottom: .5rem !important; }
-    .hero-micro { font-size: .75rem !important; margin: .75rem auto 0 !important; }
+    .hero-grid { padding-top: .4rem !important; padding-bottom: .4rem !important; }
+    #inicio .hero-grid > div:first-child { gap: 1.375rem; }
+    #inicio ul { row-gap: .3rem !important; margin-top: .4rem !important; }
+    .hero-label { margin-bottom: .4rem !important; }
+    #inicio .btn-primary { padding-top: .875rem !important; padding-bottom: .875rem !important; }
+    .hero-micro { font-size: .75rem !important; margin: .5rem auto 0 !important; }
   }
-  /* Telas baixas (< 668px de viewport, ex.: celulares com barras de navegador visíveis):
-     modo compacto — reduz só banner/espaços, mantendo título (8.45vw), intro e itens
-     (1.06rem) acoplados ao resto da página */
-  @media (max-width: 767px) and (max-height: 667px) {
-    .hero-banner-inner { height: 13vw !important; }
-    .hero-grid { padding-top: .5rem !important; padding-bottom: .5rem !important; }
-    #inicio .hero-grid > div:first-child { gap: .75rem; }
+  /* Telas grandes/altas (≥ 821px de viewport, ex.: iPhone Pro sem barras, Pro Max):
+     o título cresce p/ ~10.6vw (4 linhas editoriais) — mais presença, gaps menores */
+  @media (max-width: 767px) and (min-height: 821px) {
+    #hero-title { font-size: 10.6vw !important; }
+  }
+  /* Telas baixas (< 600px de viewport): espaçamentos enxutos — fontes NÃO mudam (acopladas) */
+  @media (max-width: 767px) and (max-height: 599px) {
+    .hero-grid { padding-top: .4rem !important; padding-bottom: .4rem !important; }
+    #inicio .hero-grid > div:first-child { gap: 1.375rem; }
     #inicio ul { row-gap: .25rem !important; margin-top: .35rem !important; }
     .hero-label { margin-bottom: .4rem !important; }
+    #inicio .btn-primary { padding-top: .875rem !important; padding-bottom: .875rem !important; }
     .hero-micro { font-size: .72rem !important; margin: .4rem auto 0 !important; }
+  }
+  /* Viewport crítico (< 630px de altura útil): nem o piso de 48px do banner cabe —
+     ele some (a margem de 52px p/ a header é mantida); conteúdo segue intacto e a
+     fatia continua garantida pela altura fixa */
+  @media (max-width: 767px) and (max-height: 629px) {
+    .hero-banner { height: 0 !important; min-height: 0 !important; }
+  }
+  /* Limite físico (< 584px de altura útil, ex.: SE 1ª geração c/ barras): nem o conteúdo
+     puro cabe — a seção volta a crescer (scroll normal) p/ nunca cortar texto/botão */
+  @media (max-width: 767px) and (max-height: 583px) {
+    #inicio { height: auto !important; min-height: calc(100vh - 16px); min-height: calc(100svh - 16px); }
   }
   /* Telas estreitas (< 350px, ex.: iPhone SE 1ª geração): CTA em 1 linha só */
   @media (max-width: 349px) {
