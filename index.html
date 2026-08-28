@@ -217,14 +217,23 @@ tailwind.config = {
     .compass-point[aria-selected="true"] { transform: scale(1.1); }
   }
 
-  /* Hero mobile compacta: CTA acima da dobra + amostra da seção seguinte */
+  /* === Sistema proporcional mobile: a composição inteira escala com a largura (vw),
+         então o padrão de quebras e as proporções são IDÊNTICOS em qualquer celular === */
+
+  /* Labels dourados: nunca quebram linha — a fonte encolhe até caber (2.8vw),
+     com teto de 12px. Vale para TODOS os labels de seção (mesma classe = mesmo tamanho) */
+  .text-gold-label { font-size: min(0.75rem, 2.8vw) !important; line-height: 1.35 !important; white-space: nowrap; }
+
+  /* Hero mobile: padding lateral proporcional (6vw) + título em vw puro.
+     Como fonte e medidas do texto escalam juntas com a tela, o título sempre
+     quebra nas MESMAS 3 linhas e ocupa a MESMA fração da tela em qualquer aparelho */
   @media (max-width: 767px) {
     #inicio { min-height: calc(100vh - 16px); min-height: calc(100svh - 16px); display: flex; flex-direction: column; }
-    #inicio .hero-grid { flex: 1 0 auto; display: flex; flex-direction: column; }
+    #inicio .hero-grid { flex: 1 0 auto; display: flex; flex-direction: column; padding-left: 6vw !important; padding-right: 6vw !important; }
     #inicio .hero-grid > div:first-child { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; gap: 1.25rem; }
     #inicio .max-w-xl, .hero-cta-wrap { margin-top: 0 !important; }
     #comecar { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
-    #hero-title { font-size: clamp(1.85rem, 10vw, 3.125rem) !important; line-height: 1.06; }
+    #hero-title { font-size: 8.45vw !important; line-height: 1.06; }
     .hero-label { margin-bottom: .875rem !important; }
     .hero-intro { font-size: 1.06rem !important; }
     #inicio ul { margin-top: .625rem !important; }
@@ -238,30 +247,29 @@ tailwind.config = {
       mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
     }
   }
-  /* Celulares de altura intermediária (690–820px, ex.: iPhone Pro com barras do Safari): banner compacto p/ caber o título grande; microcopy pode ficar na borda */
+  /* Alturas até 820px (iPhone Pro com barras do Safari, Android com barra): banner compacto e espaçamentos enxutos — fontes NÃO mudam (acopladas ao sistema) */
   @media (max-width: 767px) and (max-height: 820px) {
-    .hero-banner-inner { height: 96px !important; }
+    .hero-banner-inner { height: 23.9vw !important; }
     .hero-grid { padding-top: .5rem !important; padding-bottom: 1rem !important; }
-    #inicio .hero-grid > div:first-child { gap: 1.125rem; }
+    #inicio .hero-grid > div:first-child { gap: 1rem; }
     #inicio ul { row-gap: .35rem !important; margin-top: .5rem !important; }
     .hero-label { margin-bottom: .5rem !important; }
     .hero-micro { font-size: .75rem !important; margin: .75rem auto 0 !important; }
   }
-  /* Alturas até 729px (iPhone Pro com barras do Safari, Android com barra): título 34px */
-  @media (max-width: 767px) and (max-height: 729px) {
-    #hero-title { font-size: 2.125rem !important; }
-    .hero-grid { padding-top: .75rem !important; padding-bottom: 1rem !important; }
-    .hero-label { margin-bottom: .5rem !important; }
-    #inicio .hero-grid > div:first-child { gap: 1rem; }
-    #inicio ul { row-gap: .35rem !important; margin-top: .4rem !important; }
-    .hero-micro { font-size: .75rem !important; margin: .75rem auto 0 !important; }
+  /* Telas baixas (< 668px de viewport, ex.: celulares com barras de navegador visíveis):
+     modo compacto — reduz só banner/espaços, mantendo título (8.45vw), intro e itens
+     (1.06rem) acoplados ao resto da página */
+  @media (max-width: 767px) and (max-height: 667px) {
+    .hero-banner-inner { height: 13vw !important; }
+    .hero-grid { padding-top: .5rem !important; padding-bottom: .5rem !important; }
+    #inicio .hero-grid > div:first-child { gap: .75rem; }
+    #inicio ul { row-gap: .25rem !important; margin-top: .35rem !important; }
+    .hero-label { margin-bottom: .4rem !important; }
+    .hero-micro { font-size: .72rem !important; margin: .4rem auto 0 !important; }
   }
-  /* Telas muito baixas (iPhone SE 1ª geração / telas minúsculas): modo de sobrevivência */
-  @media (max-width: 767px) and (max-height: 639px) {
-    #hero-title { font-size: clamp(1.55rem, 7.2vw, 1.7rem) !important; }
-    .hero-intro { font-size: .78rem !important; }
-    #inicio ul li span { font-size: .8rem; }
-    .hero-micro { font-size: .72rem !important; }
+  /* Telas estreitas (< 350px, ex.: iPhone SE 1ª geração): CTA em 1 linha só */
+  @media (max-width: 349px) {
+    #inicio .btn-primary { font-size: .78rem !important; padding-left: 1rem !important; padding-right: 1rem !important; }
   }
 
   /* Linha do tempo mobile */
